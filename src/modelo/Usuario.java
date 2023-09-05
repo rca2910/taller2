@@ -4,10 +4,10 @@ package modelo;
 
 public class Usuario {
     
-    String cedula;
-    String nombre;
-    String apellido;
-    String contrasena;
+    private String cedula;
+    private String nombre;
+    private String apellido;
+    private String contrasena;
 
     public Usuario(String cedula, String nombre, String apellido, String contrasena) {
         this.cedula = cedula;
