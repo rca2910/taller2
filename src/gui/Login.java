@@ -35,6 +35,7 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Ingrese al Sistema");
 
         jLabel2.setText("Usuario");
@@ -53,10 +54,9 @@ public class Login extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(136, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnlogin)
-                    .addComponent(jLabel1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addGap(19, 19, 19))
@@ -65,13 +65,17 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(txtusuario, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtcontrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(169, 169, 169))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(jLabel1)
+                .addContainerGap(147, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(23, 23, 23)
                 .addComponent(jLabel1)
-                .addGap(37, 37, 37)
+                .addGap(39, 39, 39)
                 .addComponent(jLabel2)
                 .addGap(18, 18, 18)
                 .addComponent(txtusuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -81,7 +85,7 @@ public class Login extends javax.swing.JFrame {
                 .addComponent(txtcontrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnlogin)
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(34, Short.MAX_VALUE))
         );
 
         pack();
