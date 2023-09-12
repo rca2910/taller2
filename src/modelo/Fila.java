@@ -1,21 +1,14 @@
-
 package modelo;
 
-
 public class Fila {
-    
-    private int id;
+
     private String dato;
     private int numero;
 
-    public Fila(int id, String dato, int numero) {
-        this.id = id;
+    public Fila(String dato, int numero) {
+
         this.dato = dato;
         this.numero = numero;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getDato() {
@@ -26,10 +19,6 @@ public class Fila {
         return numero;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public void setDato(String dato) {
         this.dato = dato;
     }
@@ -37,7 +26,5 @@ public class Fila {
     public void setNumero(int numero) {
         this.numero = numero;
     }
-    
-    
-    
+
 }

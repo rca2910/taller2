@@ -1,6 +1,7 @@
 
 package modelo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -8,10 +9,10 @@ public class Columna {
     
     private int id;
     private String nombre;
-    private List fila;
+    private ArrayList fila;
     private EstadoColumna estado;
 
-    public Columna(int id, String nombre, List fila, EstadoColumna estado) {
+    public Columna(int id, String nombre, ArrayList fila, EstadoColumna estado) {
         this.id = id;
         this.nombre = nombre;
         this.fila = fila;
@@ -42,7 +43,7 @@ public class Columna {
         this.nombre = nombre;
     }
 
-    public void setFila(List fila) {
+    public void setFila(ArrayList fila) {
         this.fila = fila;
     }
 
