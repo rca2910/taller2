@@ -98,7 +98,7 @@ public class ControladorUsuario implements IControladorUsuario {
         }
     }
 
-    public Mensaje BajaAdministrador(String cedula) {
+    public Mensaje BajaUsuario(String cedula) {
 
         Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
         Mensaje respuesta = new Mensaje("", false);
@@ -120,4 +120,77 @@ public class ControladorUsuario implements IControladorUsuario {
     }
 
 }
+    public Mensaje ModificarAdministrador(String cedula, String nombre, String apellido, String contrasena, String nuevacedula) {
+
+        Mensaje respuesta = new Mensaje("", false);
+        Usuario aBuscar = ObtenerUsuarioxCedula (cedula);
+        
+        if (aBuscar == null) {
+
+            respuesta.setMensaje("El usuario ingresado no existe en el sistema");
+
+            return respuesta;
+
+        } else {
+            
+            aBuscar.setNombre(nombre);
+            aBuscar.setApellido(apellido);
+            aBuscar.setCedula(nuevacedula);
+            aBuscar.setContrasena(contrasena);
+
+            respuesta.setMensaje("El usuario fue modificado con exito");
+            respuesta.setExito(true);
+
+            return respuesta;
+        }
+    }
+    
+    public Mensaje ModificarLector(String cedula, String nombre, String apellido, String contrasena, String nuevacedula) {
+
+        Mensaje respuesta = new Mensaje("", false);
+        Usuario aBuscar = ObtenerUsuarioxCedula (cedula);
+        
+        if (aBuscar == null) {
+
+            respuesta.setMensaje("El usuario ingresado no existe en el sistema");
+
+            return respuesta;
+
+        } else {
+            
+            aBuscar.setNombre(nombre);
+            aBuscar.setApellido(apellido);
+            aBuscar.setCedula(nuevacedula);
+            aBuscar.setContrasena(contrasena);
+
+            respuesta.setMensaje("El usuario fue modificado con exito");
+            respuesta.setExito(true);
+
+            return respuesta;
+        }
+    }
+    public Mensaje ModificarComun(String cedula, String nombre, String apellido, String contrasena, String nuevacedula) {
+
+        Mensaje respuesta = new Mensaje("", false);
+        Usuario aBuscar = ObtenerUsuarioxCedula (cedula);
+        
+        if (aBuscar == null) {
+
+            respuesta.setMensaje("El usuario ingresado no existe en el sistema");
+
+            return respuesta;
+
+        } else {
+            
+            aBuscar.setNombre(nombre);
+            aBuscar.setApellido(apellido);
+            aBuscar.setCedula(nuevacedula);
+            aBuscar.setContrasena(contrasena);
+
+            respuesta.setMensaje("El usuario fue modificado con exito");
+            respuesta.setExito(true);
+
+            return respuesta;
+        }
+    }
 }

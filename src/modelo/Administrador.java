@@ -8,4 +8,7 @@ public class Administrador extends Usuario{
         super(cedula, nombre, apellido, contrasena);
     }
     
+    public Administrador (){
+        super ("","","","");
+    }
 }
