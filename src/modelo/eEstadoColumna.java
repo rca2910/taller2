@@ -2,7 +2,7 @@
 package modelo;
 
 
-public enum EstadoColumna {
+public enum eEstadoColumna {
  
     INT, STRING;
 }

@@ -1,40 +1,25 @@
 package controlador;
 
-import modelo.Administrador;
-import modelo.Comun;
-import modelo.Lector;
 import modelo.Mensaje;
 import modelo.Sistema;
 import modelo.Usuario;
+import modelo.eRolUsuario;
 
 public class ControladorUsuario implements IControladorUsuario {
 
     public Usuario ObtenerUsuarioxCedula(String cedula) {
 
-        for (Administrador a : Sistema.getInstance().getAdministradores()) {
-            if (cedula.equals(a.getCedula())) {
+        for (Usuario u : Sistema.getInstance().getUsuarios()) {
+            if (cedula.equals(u.getCedula())) {
 
-                return a;
+                return u;
             }
         }
-        for (Comun c : Sistema.getInstance().getComunes()) {
-            if (cedula.equals(c.getCedula())) {
 
-                return c;
-            }
-
-        }
-        for (Lector l : Sistema.getInstance().getLectores()) {
-            if (cedula.equals(l.getCedula())) {
-
-                return l;
-            }
-
-        }
         return null;
     }
 
-    public Mensaje AltaAdministrador(String cedula, String nombre, String apellido, String contrasena) {
+    public Mensaje AltaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol) {
 
         Mensaje respuesta = new Mensaje("", false);
         if (ObtenerUsuarioxCedula(cedula) != null) {
@@ -44,58 +29,16 @@ public class ControladorUsuario implements IControladorUsuario {
             return respuesta;
 
         } else {
-            Administrador nuevo = new Administrador(cedula, nombre, apellido, contrasena);
+            Usuario nuevo = new Usuario(cedula, nombre, apellido, contrasena, rol);
 
-            Sistema.getInstance().getAdministradores().add(nuevo);
-
-            respuesta.setMensaje("El usuario fue creado con exito");
-            respuesta.setExito(true);
-
-            return respuesta;
-        }
-
-    }
-
-    public Mensaje AltaComun(String cedula, String nombre, String apellido, String contrasena) {
-
-        Mensaje respuesta = new Mensaje("", false);
-        if (ObtenerUsuarioxCedula(cedula) != null) {
-
-            respuesta.setMensaje("El usuario ya se encuentra en el sistema");
-
-            return respuesta;
-
-        } else {
-            Comun nuevo = new Comun(cedula, nombre, apellido, contrasena);
-
-            Sistema.getInstance().getComunes().add(nuevo);
+            Sistema.getInstance().getUsuarios().add(nuevo);
 
             respuesta.setMensaje("El usuario fue creado con exito");
             respuesta.setExito(true);
 
             return respuesta;
         }
-    }
 
-    public Mensaje AltaLector(String cedula, String nombre, String apellido, String contrasena) {
-
-        Mensaje respuesta = new Mensaje("", false);
-        if (ObtenerUsuarioxCedula(cedula) != null) {
-
-            respuesta.setMensaje("El usuario ya se encuentra en el sistema");
-
-            return respuesta;
-
-        } else {
-            Lector nuevo = new Lector(cedula, nombre, apellido, contrasena);
-
-            Sistema.getInstance().getLectores().add(nuevo);
-
-            respuesta.setMensaje("El usuario fue creado con exito");
-            respuesta.setExito(true);
-
-            return respuesta;
-        }
     }
 
     public Mensaje BajaUsuario(String cedula) {
@@ -104,27 +47,25 @@ public class ControladorUsuario implements IControladorUsuario {
         Mensaje respuesta = new Mensaje("", false);
         if ((aBuscar) != null) {
 
-            Sistema.getInstance().getAdministradores().remove(aBuscar);
-            Sistema.getInstance().getLectores().remove(aBuscar);
-            Sistema.getInstance().getComunes().remove(aBuscar);
+            Sistema.getInstance().getUsuarios().remove(aBuscar);
 
             respuesta.setMensaje("El usuario ha sido eliminado");
             respuesta.setExito(true);
             return respuesta;
-        }
-        else {
-            
-            respuesta.setMensaje ("El usuario no existe en el sistema");
+        } else {
+
+            respuesta.setMensaje("El usuario no existe en el sistema");
             return respuesta;
-            
+
+        }
+
     }
 
-}
-    public Mensaje ModificarAdministrador(String cedula, String nombre, String apellido, String contrasena, String nuevacedula) {
+    public Mensaje ModificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol) {
 
         Mensaje respuesta = new Mensaje("", false);
-        Usuario aBuscar = ObtenerUsuarioxCedula (cedula);
-        
+        Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
+
         if (aBuscar == null) {
 
             respuesta.setMensaje("El usuario ingresado no existe en el sistema");
@@ -132,11 +73,12 @@ public class ControladorUsuario implements IControladorUsuario {
             return respuesta;
 
         } else {
-            
+
             aBuscar.setNombre(nombre);
             aBuscar.setApellido(apellido);
             aBuscar.setCedula(nuevacedula);
             aBuscar.setContrasena(contrasena);
+            aBuscar.setRol(rol);
 
             respuesta.setMensaje("El usuario fue modificado con exito");
             respuesta.setExito(true);
@@ -144,53 +86,15 @@ public class ControladorUsuario implements IControladorUsuario {
             return respuesta;
         }
     }
-    
-    public Mensaje ModificarLector(String cedula, String nombre, String apellido, String contrasena, String nuevacedula) {
 
-        Mensaje respuesta = new Mensaje("", false);
-        Usuario aBuscar = ObtenerUsuarioxCedula (cedula);
-        
-        if (aBuscar == null) {
+    public Usuario Login(String cedula, String contrasena) {
 
-            respuesta.setMensaje("El usuario ingresado no existe en el sistema");
+        Usuario abuscar = this.ObtenerUsuarioxCedula(cedula);
+        if (abuscar == null || !abuscar.getContrasena().equals(contrasena)) {
 
-            return respuesta;
-
-        } else {
-            
-            aBuscar.setNombre(nombre);
-            aBuscar.setApellido(apellido);
-            aBuscar.setCedula(nuevacedula);
-            aBuscar.setContrasena(contrasena);
-
-            respuesta.setMensaje("El usuario fue modificado con exito");
-            respuesta.setExito(true);
-
-            return respuesta;
+            return null;
         }
+        return abuscar;
     }
-    public Mensaje ModificarComun(String cedula, String nombre, String apellido, String contrasena, String nuevacedula) {
 
-        Mensaje respuesta = new Mensaje("", false);
-        Usuario aBuscar = ObtenerUsuarioxCedula (cedula);
-        
-        if (aBuscar == null) {
-
-            respuesta.setMensaje("El usuario ingresado no existe en el sistema");
-
-            return respuesta;
-
-        } else {
-            
-            aBuscar.setNombre(nombre);
-            aBuscar.setApellido(apellido);
-            aBuscar.setCedula(nuevacedula);
-            aBuscar.setContrasena(contrasena);
-
-            respuesta.setMensaje("El usuario fue modificado con exito");
-            respuesta.setExito(true);
-
-            return respuesta;
-        }
-    }
 }

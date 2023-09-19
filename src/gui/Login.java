@@ -4,17 +4,24 @@
  */
 package gui;
 
+import controlador.ControladorUsuario;
+import controlador.IControladorUsuario;
+import static javax.swing.JOptionPane.showMessageDialog;
+import modelo.Usuario;
+import modelo.eRolUsuario;
+
 /**
  *
  * @author rca29
  */
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Login
-     */
+    private static IControladorUsuario controladorUsuario;
+
     public Login() {
         initComponents();
+        this.setVisible(true);
+        this.controladorUsuario = new ControladorUsuario();
     }
 
     /**
@@ -41,6 +48,12 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setText("Usuario");
 
         jLabel3.setText("Contraseña");
+
+        txtusuario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtusuarioActionPerformed(evt);
+            }
+        });
 
         btnlogin.setText("Login");
         btnlogin.addActionListener(new java.awt.event.ActionListener() {
@@ -92,43 +105,39 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnloginActionPerformed
-        // TODO add your handling code here:
+        String cedula = txtusuario.getText();
+        String contrasena = txtcontrasena.getText();
+
+        Usuario usuario = controladorUsuario.Login(cedula, contrasena);
+
+        if (usuario == null) {
+            showMessageDialog(null, "Cédula o contraseña incorrecta");
+            return;
+        }
+        switch (usuario.getRol()) {
+
+            case ADMINISTRADOR:
+                AdministradorPanel panelAdministrador = new AdministradorPanel();
+
+                break;
+
+            case LECTOR:
+                break;
+            default:
+                break;
+
+        }
+        this.dispose();
+
     }//GEN-LAST:event_btnloginActionPerformed
+
+    private void txtusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtusuarioActionPerformed
+
+    }//GEN-LAST:event_txtusuarioActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Login().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnlogin;

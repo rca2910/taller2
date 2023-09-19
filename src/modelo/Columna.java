@@ -10,9 +10,9 @@ public class Columna {
     private int id;
     private String nombre;
     private ArrayList fila;
-    private EstadoColumna estado;
+    private eEstadoColumna estado;
 
-    public Columna(int id, String nombre, ArrayList fila, EstadoColumna estado) {
+    public Columna(int id, String nombre, ArrayList fila, eEstadoColumna estado) {
         this.id = id;
         this.nombre = nombre;
         this.fila = fila;
@@ -31,7 +31,7 @@ public class Columna {
         return fila;
     }
 
-    public EstadoColumna getEstado() {
+    public eEstadoColumna getEstado() {
         return estado;
     }
 
@@ -47,7 +47,7 @@ public class Columna {
         this.fila = fila;
     }
 
-    public void setEstado(EstadoColumna estado) {
+    public void setEstado(eEstadoColumna estado) {
         this.estado = estado;
     }
     
