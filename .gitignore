@@ -1,1 +1,65 @@
-/build/
+# Compiled class files
+*.class
+
+# Logs and databases
+*.log
+*.sqlite
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Directories used by popular Java build systems
+target/
+out/
+build/
+dist/
+
+# NetBeans specific
+nb-configuration.xml
+nbactions.xml
+nb-gradle/
+build/
+nbbuild/
+dist/
+nbdist/
+nbproject/private/
+nbproject/Makefile-*.mk
+nbproject/Package-*.bash
+nbproject/jfx-impl.xml
+**/nbproject/private/
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Virtual Machine crash logs
+hs_err_pid*
+
+# Ignore directories created by NetBeans
+nbproject/private/
+backup/
+
+# Ignore .env files (often used for secrets)
+.env
+private.properties
+
+# IDE generated files
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Eclipse project files
+.classpath
+.project
+.settings/

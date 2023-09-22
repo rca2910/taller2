@@ -4,6 +4,7 @@ import modelo.Mensaje;
 import modelo.Sistema;
 import modelo.Usuario;
 import modelo.eRolUsuario;
+import modelo.eVersionUsuario;
 
 public class ControladorUsuario implements IControladorUsuario {
 
@@ -19,7 +20,7 @@ public class ControladorUsuario implements IControladorUsuario {
         return null;
     }
 
-    public Mensaje AltaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol) {
+    public Mensaje AltaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario) {
 
         Mensaje respuesta = new Mensaje("", false);
         if (ObtenerUsuarioxCedula(cedula) != null) {
@@ -29,7 +30,7 @@ public class ControladorUsuario implements IControladorUsuario {
             return respuesta;
 
         } else {
-            Usuario nuevo = new Usuario(cedula, nombre, apellido, contrasena, rol);
+            Usuario nuevo = new Usuario(cedula, nombre, apellido, contrasena, rol, versionUsuario);
 
             Sistema.getInstance().getUsuarios().add(nuevo);
 
@@ -61,7 +62,7 @@ public class ControladorUsuario implements IControladorUsuario {
 
     }
 
-    public Mensaje ModificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol) {
+    public Mensaje ModificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol, eVersionUsuario versionUsuario) {
 
         Mensaje respuesta = new Mensaje("", false);
         Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
@@ -79,6 +80,7 @@ public class ControladorUsuario implements IControladorUsuario {
             aBuscar.setCedula(nuevacedula);
             aBuscar.setContrasena(contrasena);
             aBuscar.setRol(rol);
+            aBuscar.setVersionUsuario(versionUsuario);
 
             respuesta.setMensaje("El usuario fue modificado con exito");
             respuesta.setExito(true);

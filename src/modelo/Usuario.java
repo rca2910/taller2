@@ -1,4 +1,3 @@
-
 package modelo;
 
 
@@ -9,13 +8,23 @@ public class Usuario {
     private String apellido;
     private String contrasena;
     private eRolUsuario rol;
+    private eVersionUsuario versionUsuario;
 
-    public Usuario(String cedula, String nombre, String apellido, String contrasena,eRolUsuario rol) {
+    public Usuario(String cedula, String nombre, String apellido, String contrasena,eRolUsuario rol, eVersionUsuario versionUsuario) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
         this.contrasena = contrasena;
         this.rol = rol;
+        this.versionUsuario = versionUsuario;
+    }
+
+    public eVersionUsuario getVersionUsuario() {
+        return versionUsuario;
+    }
+
+    public void setVersionUsuario(eVersionUsuario versionUsuario) {
+        this.versionUsuario = versionUsuario;
     }
 
     public String getCedula() {

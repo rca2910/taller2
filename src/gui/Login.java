@@ -16,12 +16,13 @@ import modelo.eRolUsuario;
  */
 public class Login extends javax.swing.JFrame {
 
-    private static IControladorUsuario controladorUsuario;
+    private IControladorUsuario controladorUsuario;
 
-    public Login() {
+    public Login(IControladorUsuario controladorUsuario) {
         initComponents();
         this.setVisible(true);
-        this.controladorUsuario = new ControladorUsuario();
+        this.setLocationRelativeTo(null);
+        this.controladorUsuario = controladorUsuario;
     }
 
     /**
@@ -33,21 +34,25 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblLoginTitulo = new javax.swing.JLabel();
+        lblLoginUsuario = new javax.swing.JLabel();
+        lblLoginContrasena = new javax.swing.JLabel();
         txtusuario = new javax.swing.JTextField();
         txtcontrasena = new javax.swing.JTextField();
         btnlogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Gestor de Bases de datos");
+        setResizable(false);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel1.setText("Ingrese al Sistema");
+        lblLoginTitulo.setFont(new java.awt.Font("ROG Fonts", 1, 24)); // NOI18N
+        lblLoginTitulo.setText("Ingrese al Sistema");
 
-        jLabel2.setText("Usuario");
+        lblLoginUsuario.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        lblLoginUsuario.setText("Usuario");
 
-        jLabel3.setText("Contraseña");
+        lblLoginContrasena.setFont(new java.awt.Font("SansSerif", 1, 18)); // NOI18N
+        lblLoginContrasena.setText("Contraseña");
 
         txtusuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -55,7 +60,8 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
-        btnlogin.setText("Login");
+        btnlogin.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        btnlogin.setText("INGRESAR");
         btnlogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnloginActionPerformed(evt);
@@ -66,39 +72,45 @@ public class Login extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(222, 222, 222)
+                .addComponent(lblLoginTitulo)
+                .addGap(0, 244, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(365, 365, 365)
+                .addComponent(lblLoginUsuario)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnlogin)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addGap(19, 19, 19))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel3)
-                        .addComponent(txtusuario, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtcontrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(169, 169, 169))
+                .addComponent(lblLoginContrasena)
+                .addGap(348, 348, 348))
             .addGroup(layout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(jLabel1)
-                .addContainerGap(147, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtusuario, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                    .addComponent(txtcontrasena))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(329, 329, 329)
+                .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel1)
-                .addGap(39, 39, 39)
-                .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addGap(27, 27, 27)
+                .addComponent(lblLoginTitulo)
+                .addGap(27, 27, 27)
+                .addComponent(lblLoginUsuario)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtusuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(31, 31, 31)
-                .addComponent(jLabel3)
-                .addGap(18, 18, 18)
+                .addGap(47, 47, 47)
+                .addComponent(lblLoginContrasena)
+                .addGap(17, 17, 17)
                 .addComponent(txtcontrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(48, 48, 48)
                 .addComponent(btnlogin)
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addContainerGap(130, Short.MAX_VALUE))
         );
 
         pack();
@@ -117,13 +129,10 @@ public class Login extends javax.swing.JFrame {
         switch (usuario.getRol()) {
 
             case ADMINISTRADOR:
-                AdministradorPanel panelAdministrador = new AdministradorPanel();
-
-                break;
-
-            case LECTOR:
+                AdministradorPanel panelAdministrador = new AdministradorPanel(usuario);
                 break;
             default:
+                GestionBaseDeDatosPanel panelGestionBaseDeDatos = new GestionBaseDeDatosPanel(usuario);
                 break;
 
         }
@@ -141,9 +150,9 @@ public class Login extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnlogin;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel lblLoginContrasena;
+    private javax.swing.JLabel lblLoginTitulo;
+    private javax.swing.JLabel lblLoginUsuario;
     private javax.swing.JTextField txtcontrasena;
     private javax.swing.JTextField txtusuario;
     // End of variables declaration//GEN-END:variables

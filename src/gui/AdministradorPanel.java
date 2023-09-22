@@ -4,18 +4,19 @@
  */
 package gui;
 
+import modelo.Usuario;
+
 /**
  *
  * @author rca29
  */
 public class AdministradorPanel extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AdministradorPanel
-     */
-    public AdministradorPanel() {
+    private Usuario usuarioLogueado;
+    public AdministradorPanel(Usuario usuarioLogueado) {
         initComponents();
         this.setVisible(true);
+        this.usuarioLogueado = usuarioLogueado;
     }
 
     /**
@@ -32,8 +33,9 @@ public class AdministradorPanel extends javax.swing.JFrame {
         Admgestionbase = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(800, 500));
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("ROG Fonts", 1, 24)); // NOI18N
         jLabel1.setText("Panel de Control");
 
         btnAdmgestionusuario.setText("Gestión de Usuario");
@@ -44,33 +46,34 @@ public class AdministradorPanel extends javax.swing.JFrame {
         });
 
         Admgestionbase.setText("Gestión Base de Datos");
+        Admgestionbase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                AdmgestionbaseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(jLabel1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Admgestionbase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnAdmgestionusuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(149, Short.MAX_VALUE))
+                .addGap(245, 245, 245)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnAdmgestionusuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Admgestionbase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(244, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGap(49, 49, 49)
                 .addComponent(jLabel1)
-                .addGap(43, 43, 43)
+                .addGap(101, 101, 101)
                 .addComponent(btnAdmgestionusuario)
-                .addGap(53, 53, 53)
+                .addGap(107, 107, 107)
                 .addComponent(Admgestionbase)
-                .addContainerGap(111, Short.MAX_VALUE))
+                .addContainerGap(167, Short.MAX_VALUE))
         );
 
         pack();
@@ -78,10 +81,14 @@ public class AdministradorPanel extends javax.swing.JFrame {
 
     private void btnAdmgestionusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdmgestionusuarioActionPerformed
         
-        AdministradorGestionUsuario gestion = new AdministradorGestionUsuario();
-        gestion.setVisible(true);
+        GestionUsuariosPanel gestion = new GestionUsuariosPanel();
         this.dispose();
     }//GEN-LAST:event_btnAdmgestionusuarioActionPerformed
+
+    private void AdmgestionbaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdmgestionbaseActionPerformed
+        GestionBaseDeDatosPanel panelGestionBaseDeDatos = new GestionBaseDeDatosPanel(usuarioLogueado);
+        this.dispose();
+    }//GEN-LAST:event_AdmgestionbaseActionPerformed
 
     /**
      * @param args the command line arguments
