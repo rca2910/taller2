@@ -1,5 +1,6 @@
 package controlador;
 
+import java.util.ArrayList;
 import modelo.Mensaje;
 import modelo.Sistema;
 import modelo.Usuario;
@@ -98,5 +99,14 @@ public class ControladorUsuario implements IControladorUsuario {
         }
         return abuscar;
     }
-
+    
+    public ArrayList<Usuario> ObtenerUsuarios()
+    {
+        return Sistema.getInstance().getUsuarios();
+    }
+    
+    private boolean ControlarCedula(String cedulaAControlar)
+    {
+        return false;
+    }
 }
