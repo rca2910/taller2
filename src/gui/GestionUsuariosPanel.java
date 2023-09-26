@@ -4,7 +4,17 @@
  */
 package gui;
 
+import controlador.ControladorUsuario;
+import controlador.IControladorUsuario;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showMessageDialog;
+import modelo.Mensaje;
 import modelo.Usuario;
+import modelo.eRolUsuario;
+import modelo.eVersionUsuario;
 
 /**
  *
@@ -12,9 +22,18 @@ import modelo.Usuario;
  */
 public class GestionUsuariosPanel extends javax.swing.JFrame {
     
-    public GestionUsuariosPanel() {
+    private IControladorUsuario controladorUsuario;
+    private Usuario usuarioLogueado;
+    
+    public GestionUsuariosPanel(Usuario usuarioLogueado) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
+        this.usuarioLogueado = usuarioLogueado;
+        this.controladorUsuario = new ControladorUsuario();
+        listarUsuarios();
+        listarComboRoles();
+        listarComboVersiones();
     }
 
     /**
@@ -31,17 +50,21 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         btnbaja = new javax.swing.JButton();
         btnmodificacion = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
+        listaUsuarios = new javax.swing.JList<>();
+        txtNombre = new javax.swing.JTextField();
+        txtApellido = new javax.swing.JTextField();
+        txtContrasena = new javax.swing.JTextField();
+        txtCedula = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        lblNombre = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        lblContrasena = new javax.swing.JLabel();
+        comboRol = new javax.swing.JComboBox<>();
+        lblRol = new javax.swing.JLabel();
+        comboVersion = new javax.swing.JComboBox<>();
+        lblRol1 = new javax.swing.JLabel();
+        btnCerrarSesion = new javax.swing.JButton();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,27 +92,37 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
             }
         });
 
-        jScrollPane1.setViewportView(jList1);
+        jScrollPane1.setViewportView(listaUsuarios);
 
-        jTextField1.setText("jTextField1");
+        jLabel1.setText("Cedula:");
 
-        jTextField2.setText("jTextField2");
+        lblNombre.setText("Nombre:");
 
-        jTextField3.setText("jTextField3");
+        jLabel3.setText("Apellido:");
 
-        jTextField4.setText("jTextField4");
+        lblContrasena.setText("Contraseña:");
 
-        jTextField5.setText("jTextField5");
+        lblRol.setText("Rol:");
 
-        jLabel1.setText("jLabel1");
+        lblRol1.setText("Version:");
 
-        jLabel2.setText("jLabel2");
+        btnCerrarSesion.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 12)); // NOI18N
+        btnCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cerrar-sesion.png"))); // NOI18N
+        btnCerrarSesion.setText("SALIR");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
+            }
+        });
 
-        jLabel3.setText("jLabel3");
-
-        jLabel4.setText("jLabel4");
-
-        jLabel5.setText("jLabel5");
+        btnVolver.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 12)); // NOI18N
+        btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/volver.png"))); // NOI18N
+        btnVolver.setText("VOLVER");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -98,67 +131,83 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(220, 220, 220)
                 .addComponent(lblTituloGestionUsuario)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCerrarSesion))
             .addGroup(layout.createSequentialGroup()
                 .addGap(39, 39, 39)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnalta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
+                            .addComponent(lblNombre)
                             .addComponent(jLabel1)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
+                            .addComponent(lblContrasena)
+                            .addComponent(lblRol)
+                            .addComponent(lblRol1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                            .addComponent(jTextField3)
-                            .addComponent(jTextField2)
-                            .addComponent(jTextField1)
-                            .addComponent(jTextField5)))
-                    .addComponent(btnalta, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+                            .addComponent(comboRol, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtContrasena, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                            .addComponent(txtApellido)
+                            .addComponent(txtNombre)
+                            .addComponent(txtCedula)
+                            .addComponent(comboVersion, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
                     .addComponent(btnmodificacion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnbaja, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(107, 107, 107))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(btnVolver)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addComponent(lblTituloGestionUsuario)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addComponent(lblTituloGestionUsuario))
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(45, 45, 45)
+                        .addComponent(btnmodificacion)
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNombre))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtApellido, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblContrasena))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(45, 45, 45)
+                            .addComponent(comboRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblRol))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(comboVersion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblRol1))
+                        .addGap(34, 34, 34)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnalta)
-                    .addComponent(btnmodificacion))
-                .addGap(18, 18, 18)
-                .addComponent(btnbaja)
-                .addGap(106, 106, 106))
+                    .addComponent(btnbaja)
+                    .addComponent(btnalta))
+                .addGap(46, 46, 46)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -166,33 +215,103 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
 
     private void btnaltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaltaActionPerformed
 
+        String cedula = this.txtCedula.getText();
+        String nombre = this.txtNombre.getText();
+        String apellido = this.txtApellido.getText();
+        String contrasena = this.txtContrasena.getText();
+        eRolUsuario rol = this.comboRol.getModel().getElementAt(this.comboRol.getSelectedIndex());
+        eVersionUsuario version = this.comboVersion.getModel().getElementAt(this.comboVersion.getSelectedIndex());
+        Mensaje respuestaAlta = controladorUsuario.AltaUsuario(cedula, nombre, apellido, contrasena, rol, version);
+        if(respuestaAlta.isExito())
+        {
+            reiniciarCampos();
+            listarUsuarios();
+            showMessageDialog(null, respuestaAlta.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);
+        }
+        else
+        {
+            showMessageDialog(null, respuestaAlta.getMensaje(), "", JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnaltaActionPerformed
 
     private void btnbajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbajaActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnbajaActionPerformed
 
     private void btnmodificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodificacionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnmodificacionActionPerformed
 
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
 
+        new Login();
+        this.dispose();
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
+
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        new AdministradorPanel(usuarioLogueado);
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
+
+    private void reiniciarCampos()
+    {
+        this.txtCedula.setText("");
+        this.txtNombre.setText("");
+        this.txtApellido.setText("");
+        this.txtContrasena.setText("");
+        this.comboRol.setSelectedIndex(0);
+        this.comboVersion.setSelectedIndex(0);
+    }
+    
+    private void listarUsuarios()
+    {
+        DefaultListModel modelUsuario = new DefaultListModel();
+        this.listaUsuarios.setModel(modelUsuario);
+        
+        ArrayList<Usuario> usuarios = controladorUsuario.ObtenerUsuarios();
+        for(Usuario u : usuarios)
+        {
+            modelUsuario.addElement(u);
+        }
+    }
+    
+    /*Para estos dos metodos de combobox, se puede apreciar en la pestaña de
+    design del netbeans, al clickear en el combobox e ir a la pestaña code,
+    el valor asignado en la propiedad typeParameter es el enum que se usa
+    para el model*/
+    private void listarComboRoles()
+    {
+        DefaultComboBoxModel modelRol = new DefaultComboBoxModel(eRolUsuario.values());
+        this.comboRol.setModel(modelRol);
+    }
+    
+    private void listarComboVersiones()
+    {
+        DefaultComboBoxModel modelVersion = new DefaultComboBoxModel(eVersionUsuario.values());
+        this.comboVersion.setModel(modelVersion);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnCerrarSesion;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JButton btnalta;
     private javax.swing.JButton btnbaja;
     private javax.swing.JButton btnmodificacion;
+    private javax.swing.JComboBox<eRolUsuario> comboRol;
+    private javax.swing.JComboBox<eVersionUsuario> comboVersion;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JLabel lblContrasena;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblRol;
+    private javax.swing.JLabel lblRol1;
     private javax.swing.JLabel lblTituloGestionUsuario;
+    private javax.swing.JList<String> listaUsuarios;
+    private javax.swing.JTextField txtApellido;
+    private javax.swing.JTextField txtCedula;
+    private javax.swing.JTextField txtContrasena;
+    private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

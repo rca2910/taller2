@@ -13,8 +13,10 @@ import modelo.Usuario;
 public class AdministradorPanel extends javax.swing.JFrame {
 
     private Usuario usuarioLogueado;
+    
     public AdministradorPanel(Usuario usuarioLogueado) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.usuarioLogueado = usuarioLogueado;
     }
@@ -31,24 +33,37 @@ public class AdministradorPanel extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btnAdmgestionusuario = new javax.swing.JButton();
         Admgestionbase = new javax.swing.JButton();
+        btnCerrarSesion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 500));
 
         jLabel1.setFont(new java.awt.Font("ROG Fonts", 1, 24)); // NOI18N
         jLabel1.setText("Panel de Control");
 
-        btnAdmgestionusuario.setText("Gestión de Usuario");
+        btnAdmgestionusuario.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 18)); // NOI18N
+        btnAdmgestionusuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/usuarios.png"))); // NOI18N
+        btnAdmgestionusuario.setText("Gestión de Usuarios");
         btnAdmgestionusuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdmgestionusuarioActionPerformed(evt);
             }
         });
 
+        Admgestionbase.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 18)); // NOI18N
+        Admgestionbase.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/gestion-base-de-datos.png"))); // NOI18N
         Admgestionbase.setText("Gestión Base de Datos");
         Admgestionbase.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AdmgestionbaseActionPerformed(evt);
+            }
+        });
+
+        btnCerrarSesion.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 12)); // NOI18N
+        btnCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/cerrar-sesion.png"))); // NOI18N
+        btnCerrarSesion.setText("SALIR");
+        btnCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarSesionActionPerformed(evt);
             }
         });
 
@@ -57,31 +72,40 @@ public class AdministradorPanel extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(245, 245, 245)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnAdmgestionusuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(Admgestionbase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(244, Short.MAX_VALUE))
+                .addContainerGap(231, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btnAdmgestionusuario, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(242, 242, 242))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(Admgestionbase)
+                                .addGap(220, 220, 220))))
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.Alignment.TRAILING)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
-                .addComponent(jLabel1)
-                .addGap(101, 101, 101)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(50, 50, 50)
+                        .addComponent(jLabel1))
+                    .addComponent(btnCerrarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(71, 71, 71)
                 .addComponent(btnAdmgestionusuario)
-                .addGap(107, 107, 107)
+                .addGap(124, 124, 124)
                 .addComponent(Admgestionbase)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAdmgestionusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdmgestionusuarioActionPerformed
-        
-        GestionUsuariosPanel gestion = new GestionUsuariosPanel();
+
+        new GestionUsuariosPanel(usuarioLogueado);
         this.dispose();
     }//GEN-LAST:event_btnAdmgestionusuarioActionPerformed
 
@@ -89,6 +113,12 @@ public class AdministradorPanel extends javax.swing.JFrame {
         GestionBaseDeDatosPanel panelGestionBaseDeDatos = new GestionBaseDeDatosPanel(usuarioLogueado);
         this.dispose();
     }//GEN-LAST:event_AdmgestionbaseActionPerformed
+
+    private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
+
+        new Login();
+        this.dispose();
+    }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -98,6 +128,7 @@ public class AdministradorPanel extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Admgestionbase;
     private javax.swing.JButton btnAdmgestionusuario;
+    private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

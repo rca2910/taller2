@@ -66,6 +66,12 @@ public class Usuario {
     public eRolUsuario getRol() {
         return rol;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "Cedula: " + this.getCedula()+ " Datos: " + this.getNombre() + " " + this.getApellido();
+    }
  
     
 }

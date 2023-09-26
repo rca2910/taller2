@@ -17,8 +17,8 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
     
     public GestionBaseDeDatosPanel(Usuario usuarioLogueado) {
         initComponents();
-        this.setVisible(true);
         this.setLocationRelativeTo(null);
+        this.setVisible(true);
         this.usuarioLogueado = usuarioLogueado;
         switch (usuarioLogueado.getRol()) {
 

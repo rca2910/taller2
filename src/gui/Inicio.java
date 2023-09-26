@@ -17,6 +17,6 @@ public class Inicio {
         controladorUsuario.AltaUsuario("1234", "LECTOR", "LECTOR", "1234", eRolUsuario.LECTOR, eVersionUsuario.DEMO);
         controladorUsuario.AltaUsuario("4321", "COMUN", "COMUN", "1234", eRolUsuario.COMUN, eVersionUsuario.DEMO);
         
-        Login login = new Login(controladorUsuario);
+        Login login = new Login();
        
 }}
