@@ -36,7 +36,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lblNombre" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCedula" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel3" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblContrasena" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblRol" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -88,7 +88,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="txtCedula" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCedula" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -148,6 +148,7 @@
     <Component class="javax.swing.JButton" name="btnbaja">
       <Properties>
         <Property name="text" type="java.lang.String" value="Baja"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnbajaActionPerformed"/>
@@ -156,6 +157,7 @@
     <Component class="javax.swing.JButton" name="btnmodificacion">
       <Properties>
         <Property name="text" type="java.lang.String" value="Modificaci&#xf3;n"/>
+        <Property name="enabled" type="boolean" value="false"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnmodificacionActionPerformed"/>
@@ -174,6 +176,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="listaUsuariosMouseClicked"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -188,7 +193,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtCedula">
     </Component>
-    <Component class="javax.swing.JLabel" name="jLabel1">
+    <Component class="javax.swing.JLabel" name="lblCedula">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cedula:"/>
       </Properties>

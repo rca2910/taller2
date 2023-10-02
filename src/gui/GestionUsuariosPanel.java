@@ -21,10 +21,12 @@ import modelo.eVersionUsuario;
  * @author rca29
  */
 public class GestionUsuariosPanel extends javax.swing.JFrame {
-    
+
     private IControladorUsuario controladorUsuario;
     private Usuario usuarioLogueado;
-    
+    private Usuario usuarioSeleccionado;
+    DefaultListModel modelUsuario = new DefaultListModel();
+
     public GestionUsuariosPanel(Usuario usuarioLogueado) {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -55,7 +57,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         txtApellido = new javax.swing.JTextField();
         txtContrasena = new javax.swing.JTextField();
         txtCedula = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
+        lblCedula = new javax.swing.JLabel();
         lblNombre = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         lblContrasena = new javax.swing.JLabel();
@@ -79,6 +81,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         });
 
         btnbaja.setText("Baja");
+        btnbaja.setEnabled(false);
         btnbaja.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnbajaActionPerformed(evt);
@@ -86,15 +89,21 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         });
 
         btnmodificacion.setText("Modificación");
+        btnmodificacion.setEnabled(false);
         btnmodificacion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnmodificacionActionPerformed(evt);
             }
         });
 
+        listaUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaUsuariosMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(listaUsuarios);
 
-        jLabel1.setText("Cedula:");
+        lblCedula.setText("Cedula:");
 
         lblNombre.setText("Nombre:");
 
@@ -140,7 +149,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNombre)
-                            .addComponent(jLabel1)
+                            .addComponent(lblCedula)
                             .addComponent(jLabel3)
                             .addComponent(lblContrasena)
                             .addComponent(lblRol)
@@ -181,7 +190,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtCedula, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                            .addComponent(lblCedula))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -222,25 +231,26 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         eRolUsuario rol = this.comboRol.getModel().getElementAt(this.comboRol.getSelectedIndex());
         eVersionUsuario version = this.comboVersion.getModel().getElementAt(this.comboVersion.getSelectedIndex());
         Mensaje respuestaAlta = controladorUsuario.AltaUsuario(cedula, nombre, apellido, contrasena, rol, version);
-        if(respuestaAlta.isExito())
-        {
+        if (respuestaAlta.isExito()) {
             reiniciarCampos();
             listarUsuarios();
             showMessageDialog(null, respuestaAlta.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);
-        }
-        else
-        {
+        } else {
             showMessageDialog(null, respuestaAlta.getMensaje(), "", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_btnaltaActionPerformed
 
     private void btnbajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbajaActionPerformed
-        
+        Usuario aEliminar = (Usuario) this.modelUsuario.getElementAt(this.listaUsuarios.getSelectedIndex());
+        controladorUsuario.BajaUsuario(aEliminar.getCedula());
+        this.modelUsuario.remove(this.listaUsuarios.getSelectedIndex());
+        deshabilitarBotones();
     }//GEN-LAST:event_btnbajaActionPerformed
 
     private void btnmodificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodificacionActionPerformed
-        // TODO add your handling code here:
+        this.setEnabled(false);
+        new ModificarUsuario(usuarioSeleccionado, this);
     }//GEN-LAST:event_btnmodificacionActionPerformed
 
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
@@ -254,8 +264,16 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
-    private void reiniciarCampos()
-    {
+    private void listaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaUsuariosMouseClicked
+        usuarioSeleccionado = (Usuario) this.modelUsuario.getElementAt(this.listaUsuarios.getSelectedIndex());
+        if (usuarioSeleccionado.getCedula().equals(usuarioLogueado.getCedula())) {
+            deshabilitarBotones();
+        } else {
+            habilitarBotones();
+        }
+    }//GEN-LAST:event_listaUsuariosMouseClicked
+
+    private void reiniciarCampos() {
         this.txtCedula.setText("");
         this.txtNombre.setText("");
         this.txtApellido.setText("");
@@ -263,35 +281,41 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         this.comboRol.setSelectedIndex(0);
         this.comboVersion.setSelectedIndex(0);
     }
-    
-    private void listarUsuarios()
-    {
-        DefaultListModel modelUsuario = new DefaultListModel();
+
+    public void listarUsuarios() {
+        this.modelUsuario = new DefaultListModel();
         this.listaUsuarios.setModel(modelUsuario);
-        
+
         ArrayList<Usuario> usuarios = controladorUsuario.ObtenerUsuarios();
-        for(Usuario u : usuarios)
-        {
+        for (Usuario u : usuarios) {
             modelUsuario.addElement(u);
         }
     }
-    
+
+    private void habilitarBotones() {
+        this.btnmodificacion.setEnabled(true);
+        this.btnbaja.setEnabled(true);
+    }
+
+    private void deshabilitarBotones() {
+        this.btnmodificacion.setEnabled(false);
+        this.btnbaja.setEnabled(false);
+    }
+
     /*Para estos dos metodos de combobox, se puede apreciar en la pestaña de
     design del netbeans, al clickear en el combobox e ir a la pestaña code,
     el valor asignado en la propiedad typeParameter es el enum que se usa
     para el model*/
-    private void listarComboRoles()
-    {
+    private void listarComboRoles() {
         DefaultComboBoxModel modelRol = new DefaultComboBoxModel(eRolUsuario.values());
         this.comboRol.setModel(modelRol);
     }
-    
-    private void listarComboVersiones()
-    {
+
+    private void listarComboVersiones() {
         DefaultComboBoxModel modelVersion = new DefaultComboBoxModel(eVersionUsuario.values());
         this.comboVersion.setModel(modelVersion);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCerrarSesion;
     private javax.swing.JButton btnVolver;
@@ -300,9 +324,9 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
     private javax.swing.JButton btnmodificacion;
     private javax.swing.JComboBox<eRolUsuario> comboRol;
     private javax.swing.JComboBox<eVersionUsuario> comboVersion;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCedula;
     private javax.swing.JLabel lblContrasena;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblRol;

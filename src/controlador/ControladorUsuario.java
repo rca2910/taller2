@@ -69,25 +69,27 @@ public class ControladorUsuario implements IControladorUsuario {
         Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
 
         if (aBuscar == null) {
-
             respuesta.setMensaje("El usuario ingresado no existe en el sistema");
-
-            return respuesta;
-
-        } else {
-
-            aBuscar.setNombre(nombre);
-            aBuscar.setApellido(apellido);
-            aBuscar.setCedula(nuevacedula);
-            aBuscar.setContrasena(contrasena);
-            aBuscar.setRol(rol);
-            aBuscar.setVersionUsuario(versionUsuario);
-
-            respuesta.setMensaje("El usuario fue modificado con exito");
-            respuesta.setExito(true);
-
             return respuesta;
         }
+        if (!nuevacedula.equals(aBuscar.getCedula())) {
+            Usuario usuarioYaRegistrado = ObtenerUsuarioxCedula(nuevacedula);
+            if (usuarioYaRegistrado != null) {
+                respuesta.setMensaje("La cedula ingresada ya fue tomada por otro usuario");
+                return respuesta;
+            }
+        }
+        aBuscar.setNombre(nombre);
+        aBuscar.setApellido(apellido);
+        aBuscar.setCedula(nuevacedula);
+        aBuscar.setContrasena(contrasena);
+        aBuscar.setRol(rol);
+        aBuscar.setVersionUsuario(versionUsuario);
+
+        respuesta.setMensaje("El usuario fue modificado con exito");
+        respuesta.setExito(true);
+
+        return respuesta;
     }
 
     public Usuario Login(String cedula, String contrasena) {
@@ -99,14 +101,12 @@ public class ControladorUsuario implements IControladorUsuario {
         }
         return abuscar;
     }
-    
-    public ArrayList<Usuario> ObtenerUsuarios()
-    {
+
+    public ArrayList<Usuario> ObtenerUsuarios() {
         return Sistema.getInstance().getUsuarios();
     }
-    
-    private boolean ControlarCedula(String cedulaAControlar)
-    {
+
+    private boolean ControlarCedula(String cedulaAControlar) {
         return false;
     }
 }
