@@ -6,6 +6,15 @@ public class Sistema {
 
     private static Sistema sistema;
     private ArrayList<Usuario> usuarios;
+    private ArrayList<BasedeDatos> basededatos;
+
+    public void setBasededatos(ArrayList<BasedeDatos> basededatos) {
+        this.basededatos = basededatos;
+    }
+
+    public ArrayList<BasedeDatos> getBasededatos() {
+        return basededatos;
+    }
     
 
     public static Sistema getSistema() {
@@ -30,7 +39,7 @@ public class Sistema {
 
     private Sistema() {
         this.usuarios = new ArrayList<Usuario>();
-        
+        this.basededatos = new ArrayList <BasedeDatos>();
     }
 
     public synchronized static Sistema getInstance() {

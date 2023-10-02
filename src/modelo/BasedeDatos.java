@@ -9,8 +9,10 @@ public class BasedeDatos {
     private ArrayList<Tabla> tablas;
     private String nombre;
     
+    private static int contador =0;
+    
     public BasedeDatos(int id, ArrayList<Tabla> tablas, String nombre) {
-        this.id = id;
+        this.id = ++ contador;
         this.tablas = tablas;
         this.nombre = nombre;
     }
@@ -38,4 +40,10 @@ public class BasedeDatos {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
+    @Override
+    public String toString() {
+        return "BasedeDatos{" + "id=" + id + ", tablas=" + tablas + ", nombre=" + nombre + '}';
+    }
+    
 }

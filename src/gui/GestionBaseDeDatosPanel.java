@@ -12,9 +12,9 @@ import modelo.Usuario;
  * @author rca29
  */
 public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
-    
+
     private Usuario usuarioLogueado;
-    
+
     public GestionBaseDeDatosPanel(Usuario usuarioLogueado) {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -34,20 +34,17 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
 
         }
     }
-    
-    private void CargarVistaAdministrador()
-    {
-        
+
+    private void CargarVistaAdministrador() {
+
     }
 
-    private void CargarVistaComun()
-    {
+    private void CargarVistaComun() {
         this.btnCrear.setVisible(false);
         this.btnEliminar.setVisible(false);
     }
-    
-    private void CargarVistaLector()
-    {
+
+    private void CargarVistaLector() {
         this.btnCrear.setVisible(false);
         this.btnModificar.setVisible(false);
         this.btnEliminar.setVisible(false);
@@ -143,7 +140,8 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
-        // TODO add your handling code here:
+
+      
     }//GEN-LAST:event_btnCrearActionPerformed
 
 
