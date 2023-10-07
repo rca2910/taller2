@@ -115,7 +115,7 @@ public class Login extends javax.swing.JFrame {
         String cedula = txtusuario.getText();
         String contrasena = txtcontrasena.getText();
 
-        Usuario usuario = controladorUsuario.Login(cedula, contrasena);
+        Usuario usuario = controladorUsuario.login(cedula, contrasena);
 
         if (usuario == null) {
             showMessageDialog(null, "Cédula o contraseña incorrecta");

@@ -176,7 +176,7 @@ public class ModificarUsuario extends javax.swing.JFrame {
         String contrasena = this.txtContrasena.getText();
         eRolUsuario rol = this.comboRol.getModel().getElementAt(this.comboRol.getSelectedIndex());
         eVersionUsuario version = this.comboVersion.getModel().getElementAt(this.comboVersion.getSelectedIndex());
-        Mensaje modificacionUsuario = controladorUsuario.ModificarUsuario(cedula, nombre, apellido, contrasena, nuevaCedula, rol, version);
+        Mensaje modificacionUsuario = controladorUsuario.modificarUsuario(cedula, nombre, apellido, contrasena, nuevaCedula, rol, version);
         if (modificacionUsuario.isExito()) {
             gestionUsuariosPanel.listarUsuarios();
             gestionUsuariosPanel.setEnabled(true);

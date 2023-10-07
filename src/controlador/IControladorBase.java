@@ -1,16 +1,15 @@
-
 package controlador;
 
 import java.util.ArrayList;
-import modelo.BasedeDatos;
+import modelo.BaseDeDatos;
 import modelo.Mensaje;
-import modelo.Tabla;
 
 
 public interface IControladorBase {
- 
-    public Mensaje CrearBase(int id, ArrayList<Tabla> tablas, String nombre);
-    public BasedeDatos ObtenerBasedeDatosxid(int id);
-    public Mensaje EliminarBase(int id);
-    public Mensaje ModificarBasedeDatos(int id, ArrayList<Tabla> tablas, String nombre);
+    public Mensaje altaBase(String nombre);
+    public Mensaje bajaBase(int id);
+    public Mensaje renombrarBase(int id, String nombre);
+    public BaseDeDatos obtenerBaseXId(int id);
+    public boolean nombreBaseOcupado(String nombre);
+    public ArrayList<BaseDeDatos> obtenerBases();
 }

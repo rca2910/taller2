@@ -21,7 +21,7 @@ public class ControladorUsuario implements IControladorUsuario {
         return null;
     }
 
-    public Mensaje AltaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario) {
+    public Mensaje altaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario) {
 
         Mensaje respuesta = new Mensaje("", false);
         if (ObtenerUsuarioxCedula(cedula) != null) {
@@ -43,7 +43,7 @@ public class ControladorUsuario implements IControladorUsuario {
 
     }
 
-    public Mensaje BajaUsuario(String cedula) {
+    public Mensaje bajaUsuario(String cedula) {
 
         Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
         Mensaje respuesta = new Mensaje("", false);
@@ -63,7 +63,7 @@ public class ControladorUsuario implements IControladorUsuario {
 
     }
 
-    public Mensaje ModificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol, eVersionUsuario versionUsuario) {
+    public Mensaje modificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol, eVersionUsuario versionUsuario) {
 
         Mensaje respuesta = new Mensaje("", false);
         Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
@@ -92,7 +92,7 @@ public class ControladorUsuario implements IControladorUsuario {
         return respuesta;
     }
 
-    public Usuario Login(String cedula, String contrasena) {
+    public Usuario login(String cedula, String contrasena) {
 
         Usuario abuscar = this.ObtenerUsuarioxCedula(cedula);
         if (abuscar == null || !abuscar.getContrasena().equals(contrasena)) {
@@ -102,7 +102,7 @@ public class ControladorUsuario implements IControladorUsuario {
         return abuscar;
     }
 
-    public ArrayList<Usuario> ObtenerUsuarios() {
+    public ArrayList<Usuario> obtenerUsuarios() {
         return Sistema.getInstance().getUsuarios();
     }
 

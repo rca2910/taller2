@@ -8,12 +8,13 @@ import modelo.eVersionUsuario;
 
 public interface IControladorUsuario {
 
-    public Mensaje AltaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario);
+    public Mensaje altaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario);
 
-    public Mensaje BajaUsuario(String cedula);
+    public Mensaje bajaUsuario(String cedula);
 
-    public Mensaje ModificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol, eVersionUsuario versionUsuario);
+    public Mensaje modificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol, eVersionUsuario versionUsuario);
 
-    public Usuario Login(String cedula, String contrasena);
-    public ArrayList<Usuario> ObtenerUsuarios();
+    public Usuario login(String cedula, String contrasena);
+    
+    public ArrayList<Usuario> obtenerUsuarios();
 }

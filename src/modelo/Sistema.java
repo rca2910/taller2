@@ -6,14 +6,14 @@ public class Sistema {
 
     private static Sistema sistema;
     private ArrayList<Usuario> usuarios;
-    private ArrayList<BasedeDatos> basededatos;
+    private ArrayList<BaseDeDatos> basesDeDatos;
 
-    public void setBasededatos(ArrayList<BasedeDatos> basededatos) {
-        this.basededatos = basededatos;
+    public void setBasesDeDatos(ArrayList<BaseDeDatos> basesDeDatos) {
+        this.basesDeDatos = basesDeDatos;
     }
 
-    public ArrayList<BasedeDatos> getBasededatos() {
-        return basededatos;
+    public ArrayList<BaseDeDatos> getBasesDeDatos() {
+        return basesDeDatos;
     }
     
 
@@ -39,7 +39,7 @@ public class Sistema {
 
     private Sistema() {
         this.usuarios = new ArrayList<Usuario>();
-        this.basededatos = new ArrayList <BasedeDatos>();
+        this.basesDeDatos = new ArrayList <BaseDeDatos>();
     }
 
     public synchronized static Sistema getInstance() {

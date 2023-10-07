@@ -230,7 +230,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         String contrasena = this.txtContrasena.getText();
         eRolUsuario rol = this.comboRol.getModel().getElementAt(this.comboRol.getSelectedIndex());
         eVersionUsuario version = this.comboVersion.getModel().getElementAt(this.comboVersion.getSelectedIndex());
-        Mensaje respuestaAlta = controladorUsuario.AltaUsuario(cedula, nombre, apellido, contrasena, rol, version);
+        Mensaje respuestaAlta = controladorUsuario.altaUsuario(cedula, nombre, apellido, contrasena, rol, version);
         if (respuestaAlta.isExito()) {
             reiniciarCampos();
             listarUsuarios();
@@ -243,7 +243,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
 
     private void btnbajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbajaActionPerformed
         Usuario aEliminar = (Usuario) this.modelUsuario.getElementAt(this.listaUsuarios.getSelectedIndex());
-        controladorUsuario.BajaUsuario(aEliminar.getCedula());
+        controladorUsuario.bajaUsuario(aEliminar.getCedula());
         this.modelUsuario.remove(this.listaUsuarios.getSelectedIndex());
         deshabilitarBotones();
     }//GEN-LAST:event_btnbajaActionPerformed
@@ -286,7 +286,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         this.modelUsuario = new DefaultListModel();
         this.listaUsuarios.setModel(modelUsuario);
 
-        ArrayList<Usuario> usuarios = controladorUsuario.ObtenerUsuarios();
+        ArrayList<Usuario> usuarios = controladorUsuario.obtenerUsuarios();
         for (Usuario u : usuarios) {
             modelUsuario.addElement(u);
         }

@@ -1,28 +1,23 @@
-
 package modelo;
 
 import java.util.ArrayList;
 
 
-public class BasedeDatos {
+public class BaseDeDatos {
     private int id;
     private ArrayList<Tabla> tablas;
     private String nombre;
     
-    private static int contador =0;
+    private static int contador = 0;
     
-    public BasedeDatos(int id, ArrayList<Tabla> tablas, String nombre) {
-        this.id = ++ contador;
-        this.tablas = tablas;
-        this.nombre = nombre;
+    public BaseDeDatos(String nombre) {
+        this.id = ++contador;
+        this.tablas = new ArrayList<Tabla>();
+        this.nombre = nombre.toUpperCase();
     }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public ArrayList<Tabla> getTablas() {
@@ -43,7 +38,7 @@ public class BasedeDatos {
 
     @Override
     public String toString() {
-        return "BasedeDatos{" + "id=" + id + ", tablas=" + tablas + ", nombre=" + nombre + '}';
+        return "Id: " + id + " " + "Nombre: " + nombre;
     }
     
 }
