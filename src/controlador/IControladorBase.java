@@ -2,7 +2,9 @@ package controlador;
 
 import java.util.ArrayList;
 import modelo.BaseDeDatos;
+import modelo.Columna;
 import modelo.Mensaje;
+import modelo.Tabla;
 
 
 public interface IControladorBase {
@@ -12,4 +14,7 @@ public interface IControladorBase {
     public BaseDeDatos obtenerBaseXId(int id);
     public boolean nombreBaseOcupado(String nombre);
     public ArrayList<BaseDeDatos> obtenerBases();
+    public Mensaje agregarTabla(BaseDeDatos base, Tabla tabla);
+    public Mensaje agregarColumna(Tabla tabla, Columna columna);
+    public Mensaje agregarVariasColumnas(Tabla tabla, ArrayList<Columna> columnas);
 }

@@ -1,28 +1,21 @@
-
 package modelo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class Tabla {
-    
-    private int id;
+
     private String nombre;
-    private ArrayList<Columna> columna;
+    private ArrayList<Columna> columnas;
     
-    public Tabla(int id, String nombre, ArrayList<Columna> columna) {
-        this.id = id;
+    public Tabla(String nombre) {
         this.nombre = nombre;
-        this.columna = columna;
+        this.columnas = new ArrayList<Columna>();
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    
+    public Tabla(String nombre, ArrayList<Columna> columna) {
+        this.nombre = nombre;
+        this.columnas = columna;
     }
 
     public String getNombre() {
@@ -33,11 +26,11 @@ public class Tabla {
         this.nombre = nombre;
     }
 
-    public ArrayList<Columna> getColumna() {
-        return columna;
+    public ArrayList<Columna> getColumnas() {
+        return columnas;
     }
 
-    public void setColumna(ArrayList<Columna> columna) {
-        this.columna = columna;
+    public void setColumnas(ArrayList<Columna> columnas) {
+        this.columnas = columnas;
     }
 }

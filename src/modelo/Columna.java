@@ -7,50 +7,55 @@ import java.util.List;
 
 public class Columna {
     
-    private int id;
     private String nombre;
-    private ArrayList celda;
-    private eEstadoColumna estado;
+    private ArrayList celdas;
+    private eTipoColumna tipo;
+    private boolean nulleable;
 
-    public Columna(int id, String nombre, ArrayList celda, eEstadoColumna estado) {
-        this.id = id;
+    public Columna(String nombre, ArrayList celda, eTipoColumna estado, boolean nulleable) {
         this.nombre = nombre;
-        this.celda = celda;
-        this.estado = estado;
+        this.celdas = celda;
+        this.tipo = estado;
+        this.nulleable = nulleable;
     }
-
-    public int getId() {
-        return id;
+    
+    public Columna(String nombre, eTipoColumna estado, boolean nulleable) {
+        this.nombre = nombre;
+        this.celdas = new ArrayList<Celda>();
+        this.tipo = estado;
+        this.nulleable = nulleable;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public List getCelda() {
-        return celda;
+    public List getCeldas() {
+        return celdas;
     }
 
-    public eEstadoColumna getEstado() {
-        return estado;
-    }
-
-    public void setId(int id) {
-        this.id = id;
+    public eTipoColumna getTipo() {
+        return tipo;
     }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    public void setCelda(ArrayList celda) {
-        this.celda = celda;
+    public void setCeldas(ArrayList celdas) {
+        this.celdas = celdas;
     }
 
-    public void setEstado(eEstadoColumna estado) {
-        this.estado = estado;
+    public void setTipo(eTipoColumna tipo) {
+        this.tipo = tipo;
     }
     
-    
+     public boolean isNulleable() {
+        return nulleable;
+    }
+
+    public void setNulleable(boolean nulleable) {
+        this.nulleable = nulleable;
+    }
     
 }

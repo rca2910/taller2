@@ -6,7 +6,6 @@ public class Celda {
     private int numero;
 
     public Celda(String dato, int numero) {
-
         this.dato = dato;
         this.numero = numero;
     }
