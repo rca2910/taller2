@@ -64,7 +64,7 @@ public class ControladorBase implements IControladorBase {
             return respuesta;
         }
 
-        aBuscar.setNombre(nombre);
+        aBuscar.setNombre(nombre.toUpperCase());
         respuesta.setMensaje("La base de datos fue modificada exitosamente");
         respuesta.setExito(true);
 
