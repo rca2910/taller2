@@ -1,8 +1,7 @@
 package modelo;
 
-
 public class Usuario {
-    
+
     private String cedula;
     private String nombre;
     private String apellido;
@@ -10,7 +9,8 @@ public class Usuario {
     private eRolUsuario rol;
     private eVersionUsuario versionUsuario;
 
-    public Usuario(String cedula, String nombre, String apellido, String contrasena,eRolUsuario rol, eVersionUsuario versionUsuario) {
+    //Constructor
+    public Usuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario) {
         this.cedula = cedula;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -19,6 +19,7 @@ public class Usuario {
         this.versionUsuario = versionUsuario;
     }
 
+    // Getters y Setters
     public eVersionUsuario getVersionUsuario() {
         return versionUsuario;
     }
@@ -66,13 +67,12 @@ public class Usuario {
     public eRolUsuario getRol() {
         return rol;
     }
+
+    //Método toString
     
     @Override
-    public String toString()
-    {
-        return "Cedula: " + this.getCedula()+ " Datos: " + this.getNombre() + " " + this.getApellido();
+    public String toString() {
+        return "Cedula: " + this.getCedula() + " Datos: " + this.getNombre() + " " + this.getApellido();
     }
- 
-    
-}
 
+}

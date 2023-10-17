@@ -8,6 +8,9 @@ public class Tabla {
     private String nombre;
     private ArrayList<Columna> columnas;
     
+    
+    // Constructores 
+    
     public Tabla(String nombre) {
         this.nombre = nombre;
         this.columnas = new ArrayList<Columna>();
@@ -18,6 +21,8 @@ public class Tabla {
         this.columnas = columna;
     }
 
+    // Getters y Setters 
+    
     public String getNombre() {
         return nombre;
     }
@@ -33,6 +38,8 @@ public class Tabla {
     public void setColumnas(ArrayList<Columna> columnas) {
         this.columnas = columnas;
     }
+    
+    // Busca una columna en la tabla
     
     public Columna getColumnaXNombre(String nombreColumna)
     {

@@ -9,6 +9,7 @@ import modelo.eVersionUsuario;
 
 public class ControladorUsuario implements IControladorUsuario {
 
+    //Busca una cédula en la lista de usuarios y si la encuentra devuelve el usuario
     public Usuario ObtenerUsuarioxCedula(String cedula) {
 
         for (Usuario u : Sistema.getInstance().getUsuarios()) {
@@ -21,6 +22,7 @@ public class ControladorUsuario implements IControladorUsuario {
         return null;
     }
 
+    // Da de alta un usuario en la lista de usuarios
     public Mensaje altaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario) {
 
         Mensaje respuesta = new Mensaje("", false);
@@ -43,6 +45,7 @@ public class ControladorUsuario implements IControladorUsuario {
 
     }
 
+    // Da de baja un usuario de la lista de usuarios
     public Mensaje bajaUsuario(String cedula) {
 
         Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
@@ -63,6 +66,7 @@ public class ControladorUsuario implements IControladorUsuario {
 
     }
 
+    // Permite modificar datos del usuario
     public Mensaje modificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol, eVersionUsuario versionUsuario) {
 
         Mensaje respuesta = new Mensaje("", false);
@@ -92,6 +96,8 @@ public class ControladorUsuario implements IControladorUsuario {
         return respuesta;
     }
 
+    // Busca una cédula y una contraseña, para saber si el usuario está registrado en la lista de usuarios
+    
     public Usuario login(String cedula, String contrasena) {
 
         Usuario abuscar = this.ObtenerUsuarioxCedula(cedula);
@@ -102,10 +108,12 @@ public class ControladorUsuario implements IControladorUsuario {
         return abuscar;
     }
 
+    // Carga la lista de usuarios que está en el sistema
     public ArrayList<Usuario> obtenerUsuarios() {
         return Sistema.getInstance().getUsuarios();
     }
 
+    // Controla que la cédula sea correcta
     private boolean ControlarCedula(String cedulaAControlar) {
         return false;
     }
