@@ -8,6 +8,8 @@ public class MensajeQuery {
     private ArrayList<Columna> columnas;
     
 
+    // Constructores
+    
     public MensajeQuery(String mensaje, boolean exito) {
         this.mensaje = mensaje;
         this.exito = exito;
@@ -20,6 +22,8 @@ public class MensajeQuery {
         this.columnas = columnas;
     }
 
+    // Getters y Setters 
+    
     public String getMensaje() {
         return mensaje;
     }

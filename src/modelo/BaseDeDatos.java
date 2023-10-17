@@ -10,12 +10,15 @@ public class BaseDeDatos {
     
     private static int contador = 0;
     
+    //Constructor
     public BaseDeDatos(String nombre) {
         this.id = ++contador;
         this.tablas = new ArrayList<Tabla>();
         this.nombre = nombre.toUpperCase();
     }
 
+    //Getters y Setters 
+    
     public int getId() {
         return id;
     }
@@ -36,6 +39,7 @@ public class BaseDeDatos {
         this.nombre = nombre;
     }
 
+    // Método toString
     @Override
     public String toString() {
         return "Id: " + id + " " + "Nombre: " + nombre;

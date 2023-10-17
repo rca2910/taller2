@@ -5,11 +5,15 @@ public class Celda {
     private String dato;
     private int numero;
 
+    //Constructor
+    
     public Celda(String dato, int numero) {
         this.dato = dato;
         this.numero = numero;
     }
 
+    // Getters y Setters 
+    
     public String getDato() {
         return dato;
     }

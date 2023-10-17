@@ -8,11 +8,15 @@ public class Mensaje {
     private boolean exito;
     
 
+    // Constructor
+    
     public Mensaje(String mensaje, boolean exito) {
         this.mensaje = mensaje;
         this.exito = exito;
     }
 
+    // Getters y Setters
+    
     public String getMensaje() {
         return mensaje;
     }

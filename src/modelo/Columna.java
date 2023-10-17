@@ -12,6 +12,8 @@ public class Columna {
     private eTipoColumna tipo;
     private boolean nulleable;
 
+    // Constructores
+    
     public Columna(String nombre, ArrayList celda, eTipoColumna estado, boolean nulleable) {
         this.nombre = nombre;
         this.celdas = celda;
@@ -26,6 +28,8 @@ public class Columna {
         this.nulleable = nulleable;
     }
 
+    //Getters y Setters 
+    
     public String getNombre() {
         return nombre;
     }
