@@ -172,6 +172,11 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
 
         btnEjecutarQuery.setText("Ejecutar query");
         btnEjecutarQuery.setEnabled(false);
+        btnEjecutarQuery.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEjecutarQueryActionPerformed(evt);
+            }
+        });
 
         lblAcciones.setFont(new java.awt.Font("ROG Fonts", 1, 24)); // NOI18N
         lblAcciones.setText("Acciones");
@@ -286,6 +291,11 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
             habilitarBotones();
         }
     }//GEN-LAST:event_listaBasesMouseClicked
+
+    private void btnEjecutarQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarQueryActionPerformed
+        this.setEnabled(false);
+        new EjecutarQueryBase(this, baseSeleccionada, usuarioLogueado);
+    }//GEN-LAST:event_btnEjecutarQueryActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

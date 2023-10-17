@@ -316,11 +316,11 @@ public class CrearTablaBase extends javax.swing.JFrame {
         {
             if(columnasAAgregar.isEmpty())
             {
-                tablaACrear = new Tabla(nombreTabla);
+                tablaACrear = new Tabla(nombreTabla.toUpperCase());
             }
             else
             {
-                tablaACrear = new Tabla(nombreTabla, columnasAAgregar);
+                tablaACrear = new Tabla(nombreTabla.toUpperCase(), columnasAAgregar);
             }
             Mensaje respuestaAgregarTabla = controladorBase.agregarTabla(baseAModificar, tablaACrear);
             if(respuestaAgregarTabla.isExito())

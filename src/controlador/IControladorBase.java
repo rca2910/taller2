@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import modelo.BaseDeDatos;
 import modelo.Columna;
 import modelo.Mensaje;
+import modelo.MensajeQuery;
 import modelo.Tabla;
 
 
@@ -15,6 +16,7 @@ public interface IControladorBase {
     public boolean nombreBaseOcupado(String nombre);
     public ArrayList<BaseDeDatos> obtenerBases();
     public Mensaje agregarTabla(BaseDeDatos base, Tabla tabla);
-    public Mensaje agregarColumna(Tabla tabla, Columna columna);
     public Mensaje agregarVariasColumnas(Tabla tabla, ArrayList<Columna> columnas);
+    public Mensaje agregarColumna(Tabla tabla, Columna columna);
+    public MensajeQuery ejecutarQuery(BaseDeDatos baseSeleccionada, String query);
 }

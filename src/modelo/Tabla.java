@@ -33,4 +33,16 @@ public class Tabla {
     public void setColumnas(ArrayList<Columna> columnas) {
         this.columnas = columnas;
     }
+    
+    public Columna getColumnaXNombre(String nombreColumna)
+    {
+        for(Columna aBuscar : this.getColumnas())
+        {
+            if(aBuscar.getNombre().equals(nombreColumna))
+            {
+                return aBuscar;
+            }
+        }
+        return null;
+    }
 }
