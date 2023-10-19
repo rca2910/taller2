@@ -11,6 +11,8 @@ import modelo.Tabla;
 
 public class ControladorBase implements IControladorBase {
 
+    //Crea una base de datos en el sistema
+    
     public Mensaje altaBase(String nombre) {
         boolean nombreOcupado = nombreBaseOcupado(nombre);
 
@@ -32,6 +34,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
 
+    // Da de baja una base de datos en el sistema.
     public Mensaje bajaBase(int id) {
         BaseDeDatos aBuscar = obtenerBaseXId(id);
 
@@ -45,6 +48,7 @@ public class ControladorBase implements IControladorBase {
 
     }
 
+    //Permite cambiar el nombre a una base de datos existente en el sistema.
     public Mensaje renombrarBase(int id, String nombre) {
         if (nombre.isEmpty()) {
             return new Mensaje("Debe ingresar un nombre para la base de datos", false);
@@ -67,6 +71,7 @@ public class ControladorBase implements IControladorBase {
         return new Mensaje("La base de datos fue modificada exitosamente", true);
     }
 
+    //Realiza una búsqueda por ID para saber si existe una base de datos en el sistema, si existe la retorna.
     public BaseDeDatos obtenerBaseXId(int id) {
 
         for (BaseDeDatos b : Sistema.getInstance().getBasesDeDatos()) {
@@ -79,6 +84,7 @@ public class ControladorBase implements IControladorBase {
         return null;
     }
 
+    //Permite saber si un nombre de base de datos está disponible.
     public boolean nombreBaseOcupado(String nombre) {
         nombre = nombre.toUpperCase();
         for (BaseDeDatos b : Sistema.getInstance().getBasesDeDatos()) {
@@ -89,10 +95,12 @@ public class ControladorBase implements IControladorBase {
         return false;
     }
 
+    //Carga la lista de base de datos que está en el sistema.
     public ArrayList<BaseDeDatos> obtenerBases() {
         return Sistema.getInstance().getBasesDeDatos();
     }
 
+    //Permite agregar una tabla en una base de datos.
     public Mensaje agregarTabla(BaseDeDatos base, Tabla tabla) {
         Tabla tablaDisponible = obtenerTablaXNombre(base, tabla.getNombre());
         
@@ -105,6 +113,7 @@ public class ControladorBase implements IControladorBase {
         return new Mensaje("La tabla fue creada con exito", true);
     }
 
+    //Permite agregar varias columnas de una vez en una tabla.
     public Mensaje agregarVariasColumnas(Tabla tabla, ArrayList<Columna> columnas) {
         for (Columna c : columnas) 
         {
@@ -136,6 +145,7 @@ public class ControladorBase implements IControladorBase {
         return new Mensaje("Las columnas fueron agregada exitosamente", true);
     }
 
+    //Permite agregar una columna en una tabla
     public Mensaje agregarColumna(Tabla tabla, Columna columna) {
         columna.setNombre(columna.getNombre().toUpperCase());
         
@@ -159,6 +169,7 @@ public class ControladorBase implements IControladorBase {
         return new Mensaje("La columna fue agregada exitosamente", true);
     }
     
+    //Permite ejecutar una query dentro de una base de datos.
     public MensajeQuery ejecutarQuery(BaseDeDatos baseSeleccionada, String query)
     {
         if(query.isEmpty())
@@ -190,6 +201,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Realiza una búsqueda por nombre para saber si existe una tabla en una base de datos. Si existe la retorna.
     private Tabla obtenerTablaXNombre(BaseDeDatos base, String nombreTabla){
         nombreTabla = nombreTabla.toUpperCase();
         
@@ -201,6 +213,7 @@ public class ControladorBase implements IControladorBase {
         return null;
     }
     
+    //Realiza una búsqueda por nombre para saber si existe una columna en una tabla. Si existe la retorna.
     private Columna obtenerColumnaXNombre(Tabla tabla, String nombreColumna)
     {
         nombreColumna = nombreColumna.toUpperCase();
@@ -213,6 +226,7 @@ public class ControladorBase implements IControladorBase {
         return null;
     }
 
+    //Permite saber si un nombre de columna está disponible dentro de la tabla
     private boolean nombreColumnaDisponible(Tabla tabla, String nombreColumna) {
         for (Columna c : tabla.getColumnas()) {
             if (c.getNombre().toUpperCase().equals(nombreColumna.toUpperCase())) {
@@ -222,6 +236,7 @@ public class ControladorBase implements IControladorBase {
         return true;
     }
 
+    //Permite saber si una tabla tiene datos ingresados o está vacía.
     private boolean tablaTieneDatos(Tabla aVerificar) {
         //Si no tiene columnas o no tiene datos
         if (aVerificar.getColumnas().isEmpty() || aVerificar.getColumnas().get(0).getCeldas().isEmpty()) {
@@ -230,6 +245,7 @@ public class ControladorBase implements IControladorBase {
         return true;
     }
 
+    //Permite saber cuántas filas tienen las columnas de una tabla.
     private int cantidadDatosEnTabla(Tabla aVerificar) {
         if (aVerificar.getColumnas().isEmpty()) {
             return 0;
@@ -238,6 +254,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
 
+    //Obtiene los valores por defecto de una columna.
     private String obtenerValorPorDefecto(Columna columna) {
         if (columna.isNulleable()) {
             return null;
@@ -250,6 +267,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Permite ejecutar la query Select.
     private MensajeQuery interpretarSelect(BaseDeDatos baseSeleccionada, String[] sentencias)
     {
         int largoMinimo = 2;
@@ -288,21 +306,25 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("Sentencia ejecutada correctamente", true, columnasResultado);
     }
     
+    //Permite ejecutar la query Create.
     private MensajeQuery interpretarCreate(String[] sentencias)
     {
         return new MensajeQuery("No implementado aun", false);
     }
     
+    //Permite ejecutar la query Delete.
     private MensajeQuery interpretarDelete(String[] sentencias)
     {
         return new MensajeQuery("No implementado aun", false);
     }
     
+    //Permite ejecutar la query Insert.
     private MensajeQuery interpretarInsert(String[] sentencias)
     {
         return new MensajeQuery("No implementado aun", false);
     }
     
+    //Permite ejecutar la query Update.
     private MensajeQuery interpretarUpdate(String[] sentencias)
     {
         return new MensajeQuery("No implementado aun", false);
