@@ -15,14 +15,14 @@ public class Columna {
     // Constructores
     
     public Columna(String nombre, ArrayList celda, eTipoColumna estado, boolean nulleable) {
-        this.nombre = nombre;
+        this.nombre = nombre = nombre.toUpperCase();
         this.celdas = celda;
         this.tipo = estado;
         this.nulleable = nulleable;
     }
     
     public Columna(String nombre, eTipoColumna estado, boolean nulleable) {
-        this.nombre = nombre;
+        this.nombre = nombre.toUpperCase();
         this.celdas = new ArrayList<Celda>();
         this.tipo = estado;
         this.nulleable = nulleable;
@@ -43,7 +43,7 @@ public class Columna {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre.toUpperCase();
     }
 
     public void setCeldas(ArrayList celdas) {

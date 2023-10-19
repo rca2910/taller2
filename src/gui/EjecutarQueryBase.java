@@ -22,11 +22,11 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
     private Usuario usuarioLogueado;
     private DefaultTableModel modelTablaResultado;
 
-    public EjecutarQueryBase(GestionBaseDeDatosPanel panelAnterior, BaseDeDatos baseAModificar, Usuario usuarioLogueado) {
+    public EjecutarQueryBase(GestionBaseDeDatosPanel panelAnterior, int idBaseAModificar, Usuario usuarioLogueado) {
         initComponents();
         this.panelAnterior = panelAnterior;
         this.controladorBase = new ControladorBase();
-        this.baseAModificar = baseAModificar;
+        this.baseAModificar = controladorBase.obtenerBaseXId(idBaseAModificar);
         this.usuarioLogueado = usuarioLogueado;
         this.modelTablaResultado = (DefaultTableModel) tablaResultado.getModel();
         this.setLocationRelativeTo(null);
@@ -47,8 +47,9 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
         btnEjecutarQuery = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaResultado = new javax.swing.JTable();
+        btnVolver = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
 
         lblTitulo.setFont(new java.awt.Font("ROG Fonts", 1, 24)); // NOI18N
         lblTitulo.setText("EJECUTAR QUERY");
@@ -76,6 +77,15 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
         tablaResultado.setEnabled(false);
         jScrollPane1.setViewportView(tablaResultado);
 
+        btnVolver.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 12)); // NOI18N
+        btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/volver.png"))); // NOI18N
+        btnVolver.setText("VOLVER");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -83,19 +93,20 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtQuery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(260, 260, 260)
                                 .addComponent(lblTitulo))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(349, 349, 349)
-                                .addComponent(btnEjecutarQuery)))
-                        .addGap(0, 264, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtQuery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1))))
+                                .addComponent(btnEjecutarQuery))
+                            .addComponent(btnVolver))
+                        .addGap(0, 264, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -107,9 +118,10 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
                 .addComponent(txtQuery, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28)
                 .addComponent(btnEjecutarQuery)
-                .addGap(42, 42, 42)
+                .addGap(29, 29, 29)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(30, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -127,27 +139,14 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnEjecutarQueryActionPerformed
 
-    private Mensaje ejecutarQuery(String[] sentencia) {
-        if (sentencia.length >= 3) {
-            switch (sentencia[0].toUpperCase()) {
-                case "SELECT":
-                case "CREATE":
-                    break;
-                case "DELETE":
-                    break;
-                case "INSERT":
-                    break;
-                case "UPDATE":
-                    break;
-                default:
-                    return new Mensaje("Error en la query cerca de: " + sentencia[0], false);
-            }
-        }
-        return new Mensaje("Verifique que la query sea válida", false);
-    }
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
+        panelAnterior.setEnabled(true);
+        this.dispose();
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     private void mostrarColumnas(ArrayList<Columna> columnas) {
         modelTablaResultado = new DefaultTableModel();
+        this.tablaResultado.setModel(modelTablaResultado);
         for(Columna c : columnas)
         {
             modelTablaResultado.addColumn(c.getNombre());
@@ -156,6 +155,7 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEjecutarQuery;
+    private javax.swing.JButton btnVolver;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JTable tablaResultado;

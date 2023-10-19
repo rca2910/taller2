@@ -57,7 +57,6 @@ public class CrearTablaBase extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         chkNulleableColumna1 = new java.awt.Checkbox();
         btnCrear = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
         comboTipoColumna2 = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         chkNulleableColumna2 = new java.awt.Checkbox();
@@ -81,6 +80,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaBase = new javax.swing.JTable();
         lblNombreTabla = new javax.swing.JLabel();
+        btnVolver = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setResizable(false);
@@ -100,13 +100,6 @@ public class CrearTablaBase extends javax.swing.JFrame {
         btnCrear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCrearActionPerformed(evt);
-            }
-        });
-
-        btnCancelar.setText("Cancelar");
-        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCancelarActionPerformed(evt);
             }
         });
 
@@ -152,17 +145,30 @@ public class CrearTablaBase extends javax.swing.JFrame {
 
         lblNombreTabla.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
+        btnVolver.setFont(new java.awt.Font("Rockwell Extra Bold", 0, 12)); // NOI18N
+        btnVolver.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/volver.png"))); // NOI18N
+        btnVolver.setText("VOLVER");
+        btnVolver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnVolverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(151, 151, 151)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblNombreTabla)
+                .addGap(268, 268, 268))
+            .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(78, 78, 78)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(52, 52, 52)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -222,14 +228,9 @@ public class CrearTablaBase extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(chkNulleableColumna1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(48, 48, 48)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnVolver))
                 .addContainerGap(47, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(151, 151, 151)
-                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblNombreTabla)
-                .addGap(268, 268, 268))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -287,9 +288,8 @@ public class CrearTablaBase extends javax.swing.JFrame {
                     .addComponent(chkNulleableColumna5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(46, 46, 46)
                 .addComponent(btnCrear)
-                .addGap(18, 18, 18)
-                .addComponent(btnCancelar)
-                .addContainerGap(35, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(btnVolver, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -316,12 +316,11 @@ public class CrearTablaBase extends javax.swing.JFrame {
         {
             if(columnasAAgregar.isEmpty())
             {
-                tablaACrear = new Tabla(nombreTabla.toUpperCase());
+                showMessageDialog(null, "No puede crearse una tabla sin columnas", "", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-            else
-            {
-                tablaACrear = new Tabla(nombreTabla.toUpperCase(), columnasAAgregar);
-            }
+            
+            tablaACrear = new Tabla(nombreTabla.toUpperCase(), columnasAAgregar);
             Mensaje respuestaAgregarTabla = controladorBase.agregarTabla(baseAModificar, tablaACrear);
             if(respuestaAgregarTabla.isExito())
             {
@@ -331,7 +330,6 @@ public class CrearTablaBase extends javax.swing.JFrame {
                 inicializarCamposColumnas();
                 this.txtNombreTabla.setEnabled(false);
                 this.btnCrear.setText("Agregar columnas");
-                this.btnCancelar.setText("Finalizar");
             }
             else
             {
@@ -354,10 +352,10 @@ public class CrearTablaBase extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCrearActionPerformed
 
-    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+    private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         panelAnterior.setEnabled(true);
         this.dispose();
-    }//GEN-LAST:event_btnCancelarActionPerformed
+    }//GEN-LAST:event_btnVolverActionPerformed
 
     private void inicializarCamposColumnas(){
         this.txtNombreColumna1.setText("");
@@ -455,8 +453,8 @@ public class CrearTablaBase extends javax.swing.JFrame {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnCrear;
+    private javax.swing.JButton btnVolver;
     private java.awt.Checkbox chkNulleableColumna1;
     private java.awt.Checkbox chkNulleableColumna2;
     private java.awt.Checkbox chkNulleableColumna3;

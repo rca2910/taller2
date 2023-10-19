@@ -36,7 +36,7 @@ public class BaseDeDatos {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre.toUpperCase();
     }
 
     // Método toString

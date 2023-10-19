@@ -102,7 +102,7 @@ public class ControladorBase implements IControladorBase {
         }
         
         base.getTablas().add(tabla);
-        return new Mensaje("El nombre de la tabla ya existe en la base de datos", true);
+        return new Mensaje("La tabla fue creada con exito", true);
     }
 
     public Mensaje agregarVariasColumnas(Tabla tabla, ArrayList<Columna> columnas) {
@@ -285,7 +285,7 @@ public class ControladorBase implements IControladorBase {
         ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
         columnasResultado.add(columnaSeleccionada);//Esto es solo para probar
         
-        return new MensajeQuery("La columna: " + sentencias[posicionColumnaSeleccionada] + "no existe en la tabla seleccionada", false, columnasResultado);
+        return new MensajeQuery("Sentencia ejecutada correctamente", true, columnasResultado);
     }
     
     private MensajeQuery interpretarCreate(String[] sentencias)

@@ -17,7 +17,7 @@ public class Tabla {
     }
     
     public Tabla(String nombre, ArrayList<Columna> columna) {
-        this.nombre = nombre;
+        this.nombre = nombre = nombre.toUpperCase();
         this.columnas = columna;
     }
 
@@ -28,7 +28,7 @@ public class Tabla {
     }
 
     public void setNombre(String nombre) {
-        this.nombre = nombre;
+        this.nombre = nombre.toUpperCase();
     }
 
     public ArrayList<Columna> getColumnas() {

@@ -287,14 +287,15 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
     private void listaBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaBasesMouseClicked
         if(this.listaBases.getSelectedIndex() >= 0)
         {
-            baseSeleccionada = (BaseDeDatos) this.modelBases.getElementAt(this.listaBases.getSelectedIndex());
+            BaseDeDatos baseDeLista = (BaseDeDatos) this.modelBases.getElementAt(this.listaBases.getSelectedIndex());
+            baseSeleccionada = controladorBase.obtenerBaseXId(baseDeLista.getId());
             habilitarBotones();
         }
     }//GEN-LAST:event_listaBasesMouseClicked
 
     private void btnEjecutarQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarQueryActionPerformed
         this.setEnabled(false);
-        new EjecutarQueryBase(this, baseSeleccionada, usuarioLogueado);
+        new EjecutarQueryBase(this, baseSeleccionada.getId(), usuarioLogueado);
     }//GEN-LAST:event_btnEjecutarQueryActionPerformed
 
 
