@@ -654,7 +654,7 @@ public class ControladorBase implements IControladorBase {
             return new MensajeQuery("El valor de: " + nuevoValor + " no es valido para la columna " + nombreColumna, false);
         }
 
-        boolean tieneWhere = sentencias.length > posicionValorAModificar;
+        boolean tieneWhere = sentencias.length > posicionValorAModificar +1;
         int caldasModificadas = 0;
 
         if(tieneWhere)
