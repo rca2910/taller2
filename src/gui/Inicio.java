@@ -28,10 +28,12 @@ public class Inicio {
         controladorBase.altaBase("prueba");
         BaseDeDatos prueba = controladorBase.obtenerBaseXId(1);
         Columna nombre = new Columna("nombre", eTipoColumna.STRING, true);
-        Columna apellido = new Columna("apellido", eTipoColumna.STRING, true);
+        Columna apellido = new Columna("apellido", eTipoColumna.STRING, false);
+        Columna edad = new Columna("edad", eTipoColumna.INT, true);
         ArrayList<Columna> columnas = new ArrayList<Columna>();
         columnas.add(nombre);
         columnas.add(apellido);
+        columnas.add(edad);
         Tabla personas = new Tabla("personas", columnas);
         controladorBase.agregarTabla(prueba, personas);
         

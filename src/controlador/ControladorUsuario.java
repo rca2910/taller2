@@ -24,23 +24,15 @@ public class ControladorUsuario implements IControladorUsuario {
 
     // Da de alta un usuario en la lista de usuarios
     public Mensaje altaUsuario(String cedula, String nombre, String apellido, String contrasena, eRolUsuario rol, eVersionUsuario versionUsuario) {
-
-        Mensaje respuesta = new Mensaje("", false);
         if (ObtenerUsuarioxCedula(cedula) != null) {
-
-            respuesta.setMensaje("El usuario ya se encuentra en el sistema");
-
-            return respuesta;
+            return new Mensaje("El usuario ya se encuentra en el sistema", false);
 
         } else {
             Usuario nuevo = new Usuario(cedula, nombre, apellido, contrasena, rol, versionUsuario);
 
             Sistema.getInstance().getUsuarios().add(nuevo);
 
-            respuesta.setMensaje("El usuario fue creado con exito");
-            respuesta.setExito(true);
-
-            return respuesta;
+            return new Mensaje("El usuario fue creado con exito", true);
         }
 
     }
@@ -54,33 +46,24 @@ public class ControladorUsuario implements IControladorUsuario {
 
             Sistema.getInstance().getUsuarios().remove(aBuscar);
 
-            respuesta.setMensaje("El usuario ha sido eliminado");
-            respuesta.setExito(true);
-            return respuesta;
+            return new Mensaje("El usuario ha sido eliminado", true);
         } else {
-
-            respuesta.setMensaje("El usuario no existe en el sistema");
-            return respuesta;
-
+            return new Mensaje("El usuario no existe en el sistema", false);
         }
 
     }
 
     // Permite modificar datos del usuario
     public Mensaje modificarUsuario(String cedula, String nombre, String apellido, String contrasena, String nuevacedula, eRolUsuario rol, eVersionUsuario versionUsuario) {
-
-        Mensaje respuesta = new Mensaje("", false);
         Usuario aBuscar = ObtenerUsuarioxCedula(cedula);
 
         if (aBuscar == null) {
-            respuesta.setMensaje("El usuario ingresado no existe en el sistema");
-            return respuesta;
+            return new Mensaje("El usuario ingresado no existe en el sistema", false);
         }
         if (!nuevacedula.equals(aBuscar.getCedula())) {
             Usuario usuarioYaRegistrado = ObtenerUsuarioxCedula(nuevacedula);
             if (usuarioYaRegistrado != null) {
-                respuesta.setMensaje("La cedula ingresada ya fue tomada por otro usuario");
-                return respuesta;
+                return new Mensaje("La cedula ingresada ya fue tomada por otro usuario", false);
             }
         }
         aBuscar.setNombre(nombre);
@@ -89,11 +72,8 @@ public class ControladorUsuario implements IControladorUsuario {
         aBuscar.setContrasena(contrasena);
         aBuscar.setRol(rol);
         aBuscar.setVersionUsuario(versionUsuario);
-
-        respuesta.setMensaje("El usuario fue modificado con exito");
-        respuesta.setExito(true);
-
-        return respuesta;
+        
+        return new Mensaje("El usuario fue modificado con exito", true);
     }
 
     // Busca una cédula y una contraseña, para saber si el usuario está registrado en la lista de usuarios

@@ -36,10 +36,6 @@ public class MensajeQuery {
         this.mensaje = mensaje;
     }
 
-    public void setExito(boolean exito) {
-        this.exito = exito;
-    }
-
     public ArrayList<Columna> getColumnas() {
         return columnas;
     }

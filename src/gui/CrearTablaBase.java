@@ -395,7 +395,6 @@ public class CrearTablaBase extends javax.swing.JFrame {
     que se esta creando, en caso de que la tabla aun no se haya creado, solo verifica
     lo primero, los datos se almacenan en al variable columnasAAgregar*/
     private Mensaje cargarColumnas(){
-        Mensaje respuesta = new Mensaje("", false);
         ArrayList<Columna> columnasAAgregarAux = new ArrayList<Columna>();
         
         Columna columna1 = generarColumna(this.txtNombreColumna1, this.comboTipoColumna1, this.chkNulleableColumna1);
@@ -418,14 +417,12 @@ public class CrearTablaBase extends javax.swing.JFrame {
             }
             if(nombreColumnaRepetido(c.getNombre()))
             {
-                respuesta.setMensaje("Verifique que no hayan columnas repetidas en la tabla");
-                return respuesta;
+                return new Mensaje("Verifique que no hayan columnas repetidas en la tabla", false);
             }
             columnasAAgregar.add(c);
         }
         
-        respuesta.setExito(true);
-        return respuesta;
+        return new Mensaje("", true);
     }
     
     private Columna generarColumna(JTextField campoTexto, JComboBox<eTipoColumna> comboBox, Checkbox check)

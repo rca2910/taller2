@@ -2,28 +2,28 @@ package modelo;
 
 public class Celda {
 
-    private String dato;
+    private String valor;
     private int numero;
 
     //Constructor
     
     public Celda(String dato, int numero) {
-        this.dato = dato;
+        this.valor = dato;
         this.numero = numero;
     }
 
     // Getters y Setters 
     
-    public String getDato() {
-        return dato;
+    public String getValor() {
+        return valor;
     }
 
     public int getNumero() {
         return numero;
     }
 
-    public void setDato(String dato) {
-        this.dato = dato;
+    public void setValor(String valor) {
+        this.valor = valor;
     }
 
     public void setNumero(int numero) {

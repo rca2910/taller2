@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
 import modelo.BaseDeDatos;
+import modelo.Celda;
 import modelo.Columna;
 import modelo.Mensaje;
 import modelo.MensajeQuery;
@@ -150,6 +151,10 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
         for(Columna c : columnas)
         {
             modelTablaResultado.addColumn(c.getNombre());
+            for (Celda celda : c.getCeldas()) 
+            {
+                modelTablaResultado.addRow(new Object[]{celda.getValor()});
+            }
         }
     }
 

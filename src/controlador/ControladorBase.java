@@ -1,5 +1,6 @@
 package controlador;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import modelo.BaseDeDatos;
 import modelo.Celda;
@@ -8,6 +9,7 @@ import modelo.Mensaje;
 import modelo.MensajeQuery;
 import modelo.Sistema;
 import modelo.Tabla;
+import modelo.eTipoColumna;
 
 public class ControladorBase implements IControladorBase {
 
@@ -178,9 +180,9 @@ public class ControladorBase implements IControladorBase {
                 case "DELETE":
                     return interpretarDelete(sentencias);
                 case "INSERT":
-                    return interpretarInsert(sentencias);
+                    return interpretarInsert(baseSeleccionada, sentencias);
                 case "UPDATE":
-                    return interpretarUpdate(sentencias);
+                    return interpretarUpdate(baseSeleccionada, sentencias);
                 default:
                     return new MensajeQuery("Error en la query en: " + sentencias[0], false);
             }
@@ -250,6 +252,184 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    private boolean valorValido(Columna columna, String valor)
+    {
+        if(valor.toUpperCase() == "NULL" && columna.isNulleable() == false)
+        {
+            return false;
+        }
+        
+        if(valor == null || valor.isEmpty())
+        {
+            return true;
+        }
+        
+        if(columna.getTipo() == eTipoColumna.INT)
+        {
+            try{
+                Integer.parseInt(valor);
+                return true;
+            }
+            catch(Exception e){
+                return false;
+            }
+        }
+        
+        if(columna.getTipo() == eTipoColumna.STRING)
+        {
+            if(valor.startsWith("'") && valor.endsWith("'"))
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        return false;
+    }
+    
+    private void agregarValorAColumna(Columna columna, String valor)
+    {
+        int numeroCelda = columna.getCeldas().size();
+        if(columna.getTipo() == eTipoColumna.STRING && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
+        {
+            valor = valor.substring(1, valor.length() - 1);
+        }
+        columna.getCeldas().add(new Celda(valor, numeroCelda));
+    }
+    
+    private void agregarValorPorDefectoAColumna(Columna columna)
+    {
+        int numeroCelda = columna.getCeldas().size();
+        String valorPorDefecto = obtenerValorPorDefecto(columna);
+        columna.getCeldas().add(new Celda(valorPorDefecto, numeroCelda));
+    }
+    
+    private ArrayList<Celda> obtenerCeldasXCondiciones(Columna columna, ArrayList<AbstractMap.SimpleEntry<String, String>> condiciones)
+    {
+        ArrayList<Celda> celdasEncontradas = new ArrayList<Celda>();
+        boolean primerChequeoRealizado = false;
+        for(AbstractMap.SimpleEntry<String, String> condicion : condiciones)
+        {
+            if(primerChequeoRealizado == false)
+            {
+                for(Celda c: columna.getCeldas())
+                {
+                    if(celdaCumpleCondicion(columna.getTipo(), c, condicion))
+                    {
+                        celdasEncontradas.add(c);
+                    }
+                }
+                primerChequeoRealizado = true;
+            }
+            else
+            {
+                for(Celda c : celdasEncontradas)
+                {
+                    if(!celdaCumpleCondicion(columna.getTipo(), c, condicion))
+                    {
+                        celdasEncontradas.remove(c);
+                    }
+                }
+            }
+        }
+        return celdasEncontradas;
+    }
+    
+    private void modificarValorTodasLasCeldas(Columna columna, String valor)
+    {
+        if(columna.getTipo() == eTipoColumna.STRING && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
+        {
+            valor = valor.substring(1, valor.length() - 1);
+        }
+        for(Celda c : columna.getCeldas())
+        {
+            c.setValor(valor);
+        }
+    }
+    
+    private String formatearCondicion(String condicion)
+    {
+        switch(condicion)
+        {
+            case ">":
+                return "MAYOR";
+            case "<":
+                return "MENOR";
+            case "=":
+                return "IGUAL";
+            case "<>":
+                return "DISTINTO";
+            default:
+                return null;
+        }
+    }
+    
+    private boolean celdaCumpleCondicion(eTipoColumna tipo, Celda celda, AbstractMap.SimpleEntry<String, String> condicion)
+    {
+        if(condicion.getKey() == "NULL" && celda.getValor().equals(null))
+        {
+            return true;
+        }
+        
+        if(condicion.getKey().equals("MAYOR"))
+        {
+            if(tipo == eTipoColumna.INT && Integer.parseInt(celda.getValor()) > Integer.parseInt(condicion.getValue()))
+            {
+                return true;
+            }
+            if(tipo == eTipoColumna.STRING)
+            {
+                return celda.getValor().compareTo(condicion.getValue()) > 0;
+            }
+            
+            return false;
+        }
+        
+        if(condicion.getKey().equals("MENOR"))
+        {
+            if(tipo == eTipoColumna.INT && Integer.parseInt(celda.getValor()) < Integer.parseInt(condicion.getValue()))
+            {
+                return true;
+            }
+            if(tipo == eTipoColumna.STRING)
+            {
+                return celda.getValor().compareTo(condicion.getValue()) < 0;
+            }
+            
+            return false;
+        }
+        
+        if(condicion.getKey().equals("IGUAL"))
+        {
+            if(tipo == eTipoColumna.INT && Integer.parseInt(celda.getValor()) == Integer.parseInt(condicion.getValue()))
+            {
+                return true;
+            }
+            if(tipo == eTipoColumna.STRING)
+            {
+                return celda.getValor().equals(condicion.getValue());
+            }
+            
+            return false;
+        }
+        
+        if(condicion.getKey().equals("DISTINTO"))
+        {
+            if(tipo == eTipoColumna.INT && Integer.parseInt(celda.getValor()) != Integer.parseInt(condicion.getValue()))
+            {
+                return true;
+            }
+            if(tipo == eTipoColumna.STRING)
+            {
+                return !celda.getValor().equals(condicion.getValue());
+            }
+            
+            return false;
+        }
+        
+        return false;
+    }
+    
     private MensajeQuery interpretarSelect(BaseDeDatos baseSeleccionada, String[] sentencias)
     {
         int largoMinimo = 2;
@@ -298,13 +478,255 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("No implementado aun", false);
     }
     
-    private MensajeQuery interpretarInsert(String[] sentencias)
+    private MensajeQuery interpretarInsert(BaseDeDatos baseSeleccionada, String[] sentencias)
     {
-        return new MensajeQuery("No implementado aun", false);
+        int posicionInto = 1;
+        int posicionTabla = 2;
+        int posicionColumnas = 3;
+        
+        if(!sentencias[posicionInto].equals("INTO"))
+        {
+            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionInto], false);
+        }
+        
+        String nombreTabla = sentencias[posicionTabla].trim();
+        
+        ArrayList<String> nombresColumnas = new ArrayList<String>();
+        String primeraColumna = sentencias[posicionColumnas].replaceAll("[\\(,\\)]", "");
+        
+        nombresColumnas.add(primeraColumna);
+        
+        int cantidadColumnas = 1;
+        
+        if(!sentencias[posicionColumnas].endsWith(")"))
+        {
+            boolean finalizacionChequeoColumnas = false;
+            
+            while(finalizacionChequeoColumnas == false)
+            {
+                String nuevaColumna = sentencias[posicionColumnas + cantidadColumnas];
+                if(nuevaColumna.endsWith(")"))
+                {
+                    finalizacionChequeoColumnas = true;
+                }
+                
+                nuevaColumna = nuevaColumna.replaceAll("[,)]$", "").trim();
+                nombresColumnas.add(nuevaColumna);
+                cantidadColumnas++;
+            }
+        }
+        
+        int posicionValues = posicionColumnas + cantidadColumnas;
+        int posicionValores = posicionValues+1;
+        
+        if(!sentencias[posicionValues].equals("VALUES"))
+        {
+            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionValues], false);
+        }
+        
+        ArrayList<String> valoresAAgregar = new ArrayList<String>();
+        boolean finalizacionChequeoValores = false;
+        
+        while(finalizacionChequeoValores == false)
+        {
+            String nuevoValor = sentencias[posicionValores];
+            if(nuevoValor.endsWith(")") || nuevoValor.endsWith(";"))
+            {
+                finalizacionChequeoValores = true;
+            }
+            nuevoValor = nuevoValor.replaceAll("[\\(,\\);]", "").trim();
+            if (nuevoValor.startsWith("\"") || nuevoValor.endsWith("\""))
+            {
+                return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionValores], false);
+            }
+            valoresAAgregar.add(nuevoValor);
+            posicionValores++;
+        }
+        
+        Tabla tablaAModificar = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
+        
+        if(tablaAModificar == null)
+        {
+            return new MensajeQuery("La tabla no existe en la base de datos", false);
+        }
+        
+        if(nombresColumnas.size() != valoresAAgregar.size())
+        {
+            return new MensajeQuery("La cantidad de columnas no coincide con los valores a agregar", false);
+        }
+        
+        for(int i = 0; i < nombresColumnas.size(); i++)
+        {
+            Columna columnaAVerificar = obtenerColumnaXNombre(tablaAModificar, nombresColumnas.get(i));
+            if(columnaAVerificar == null)
+            {
+                return new MensajeQuery("La columna: " + nombresColumnas.get(i) + " no existe en la tabla " + nombreTabla, false);
+            }
+            if(!valorValido(columnaAVerificar, valoresAAgregar.get(i)))
+            {
+                return new MensajeQuery("El valor de: " + valoresAAgregar.get(i) + " no es valido para la columna " + nombresColumnas.get(i), false);
+            }
+        }
+        
+        for(Columna c : tablaAModificar.getColumnas())
+        {
+            boolean valorAgregado = false;
+            for(int i = 0; i < nombresColumnas.size(); i++)
+            {
+                if(valorAgregado == true)
+                {
+                    continue;
+                }
+                if(c.getNombre().equals(nombresColumnas.get(i)))
+                {
+                    agregarValorAColumna(c, valoresAAgregar.get(i));
+                    valorAgregado = true;
+                }
+            }
+            if(valorAgregado == false)
+            {
+                agregarValorPorDefectoAColumna(c);
+            }
+        }
+        
+        return new MensajeQuery("Valores agregados correctamente", true);
     }
     
-    private MensajeQuery interpretarUpdate(String[] sentencias)
+    private MensajeQuery interpretarUpdate(BaseDeDatos baseSeleccionada, String[] sentencias)
     {
-        return new MensajeQuery("No implementado aun", false);
+        int posicionTabla = 1;
+        int posicionSet = 2;
+        int posicionColumna = 3;
+        int posicionIgual = 4;
+        int posicionValorAModificar = 5;
+        
+        String nombreTabla = sentencias[posicionTabla].trim();
+        
+        if(!sentencias[posicionSet].equals("SET"))
+        {
+            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionSet], false);
+        }
+        
+        String nombreColumna = sentencias[posicionColumna].trim();
+        
+        if(!sentencias[posicionIgual].equals("="))
+        {
+            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionIgual], false);
+        }
+        
+        String nuevoValor = sentencias[posicionValorAModificar].trim();
+        
+        Tabla tablaAModificar = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
+        
+        if(tablaAModificar == null)
+        {
+            return new MensajeQuery("La tabla" + nombreTabla +  " no existe en la base de datos", false);
+        }
+        
+        Columna columnaAModificar = obtenerColumnaXNombre(tablaAModificar, nombreColumna);
+        
+        if(columnaAModificar == null)
+        {
+            return new MensajeQuery("La columna" + nombreColumna + " no existe en la tabla " + nombreTabla, false);
+        }
+        
+        if(!valorValido(columnaAModificar, nuevoValor))
+        {
+            return new MensajeQuery("El valor de: " + nuevoValor + " no es valido para la columna " + nombreColumna, false);
+        }
+        
+        boolean tieneWhere = sentencias.length > posicionValorAModificar;
+        int caldasModificadas = 0;
+        
+        if(tieneWhere)
+        {
+            int posicionWhere = 6;
+            if(!sentencias[posicionWhere].equals("WHERE"))
+            {
+                return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionWhere], false);
+            }
+            
+            ArrayList<Columna> columnasAConsiderar = new ArrayList<Columna>();
+            ArrayList<AbstractMap.SimpleEntry<String, String>> condiciones = new ArrayList<AbstractMap.SimpleEntry<String, String>>();
+            
+            int posicionRecolectarColumna = 7;
+            boolean condicionesRecolectadas = false;
+            while(condicionesRecolectadas == false)
+            {
+                int posicionRecolectarCondicion = posicionRecolectarColumna +1;
+                if(sentencias[posicionRecolectarCondicion].equals("IS"))
+                {
+                    posicionRecolectarCondicion++;
+                }
+                int posicionRecolectarValor = posicionRecolectarCondicion +1;
+                
+                Columna columnaAConsiderar = obtenerColumnaXNombre(tablaAModificar, sentencias[posicionRecolectarColumna]);
+                if(columnaAConsiderar == null)
+                {
+                    return new MensajeQuery("La columna" + nombreColumna + " no existe en la tabla " + nombreTabla, false);
+                }
+                columnasAConsiderar.add(columnaAConsiderar);
+                
+                String condicionAConsiderar = formatearCondicion(sentencias[posicionRecolectarCondicion]);
+                if(condicionAConsiderar == null)
+                {
+                    return new MensajeQuery("Verifique la condicion: " + sentencias[posicionRecolectarCondicion], false);
+                }
+                
+                String valorAConsiderar = sentencias[posicionRecolectarValor];
+                
+                if(sentencias.length == posicionRecolectarValor +1)
+                {
+                    if(valorAConsiderar.endsWith(";"))
+                    {
+                        valorAConsiderar = valorAConsiderar.substring(0, valorAConsiderar.length() - 1);
+                    }
+                    condicionesRecolectadas = true;
+                }
+                else
+                {
+                    posicionRecolectarColumna = posicionRecolectarValor +1;
+                    if(!sentencias[posicionRecolectarColumna].equals("AND"))
+                    {
+                        return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionRecolectarColumna], false);
+                    }
+                }
+                
+                if(!valorValido(columnaAConsiderar, valorAConsiderar))
+                {
+                    return new MensajeQuery("El valor de: " + valorAConsiderar + " no es valido para la columna " + columnaAConsiderar, false);
+                }
+                AbstractMap.SimpleEntry<String, String> condicion = new AbstractMap.SimpleEntry<String, String>(condicionAConsiderar, valorAConsiderar);
+                condiciones.add(condicion);
+            }
+            ArrayList<String> nombresColumnasFiltradas = new ArrayList<String>();
+            ArrayList<Celda> celdasCumplenCondicion = new ArrayList<Celda>();
+            /*for(Columna c : columnasAConsiderar)
+            {
+                boolean columnaYaFiltrada = false;
+                for(String cf : nombresColumnasFiltradas)
+                {
+                    if(cf.equals(c.getNombre()))
+                    {
+                        columnaYaFiltrada = true;
+                    }
+                }
+                if(columnaYaFiltrada == false)
+                {
+                    for(int i = 0; i<columnasAConsiderar.size(); i++)
+                    {
+                        
+                    }
+                }
+                nombresColumnasFiltradas.add(c.getNombre());
+            }*/
+        }
+        else
+        {
+            modificarValorTodasLasCeldas(columnaAModificar, nuevoValor);
+            caldasModificadas = columnaAModificar.getCeldas().size();
+        }
+        
+        return new MensajeQuery("Ejecucion realizada con exito, se modificaron: " + caldasModificadas + " celdas", true);
     }
 }

@@ -28,11 +28,6 @@ public class Mensaje {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-
-    public void setExito(boolean exito) {
-        this.exito = exito;
-    }
-    
     
     
 }

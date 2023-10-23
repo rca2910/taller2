@@ -8,13 +8,13 @@ import java.util.List;
 public class Columna {
     
     private String nombre;
-    private ArrayList celdas;
+    private ArrayList<Celda> celdas;
     private eTipoColumna tipo;
     private boolean nulleable;
 
     // Constructores
     
-    public Columna(String nombre, ArrayList celda, eTipoColumna estado, boolean nulleable) {
+    public Columna(String nombre, ArrayList<Celda> celda, eTipoColumna estado, boolean nulleable) {
         this.nombre = nombre = nombre.toUpperCase();
         this.celdas = celda;
         this.tipo = estado;
@@ -34,7 +34,7 @@ public class Columna {
         return nombre;
     }
 
-    public List getCeldas() {
+    public ArrayList<Celda> getCeldas() {
         return celdas;
     }
 
@@ -46,7 +46,7 @@ public class Columna {
         this.nombre = nombre.toUpperCase();
     }
 
-    public void setCeldas(ArrayList celdas) {
+    public void setCeldas(ArrayList<Celda> celdas) {
         this.celdas = celdas;
     }
 
