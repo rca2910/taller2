@@ -363,6 +363,22 @@ public class ControladorBase implements IControladorBase {
             c.setValor(valor);
         }
     }
+    
+    private void modificarValorNumeroCelda(Columna columna, String valor, int numeroCelda)
+    {
+        if(columna.getTipo() == eTipoColumna.STRING && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
+        {
+            valor = valor.substring(1, valor.length() - 1);
+        }
+        for(Celda c : columna.getCeldas())
+        {
+            if(c.getNumero() == numeroCelda)
+            {
+                c.setValor(valor);
+                return;
+            }
+        }
+    }
 
     private String formatearCondicion(String condicion)
     {
@@ -386,6 +402,11 @@ public class ControladorBase implements IControladorBase {
         if(condicion.getKey() == "NULL" && celda.getValor().equals(null))
         {
             return true;
+        }
+        
+        if(tipo == eTipoColumna.STRING && condicion.getValue().startsWith("'") && condicion.getValue().endsWith("'") && condicion.getValue().length() > 1)
+        {
+            condicion.setValue( condicion.getValue().substring(1, condicion.getValue().length() - 1));
         }
 
         if(condicion.getKey().equals("MAYOR"))
@@ -720,7 +741,7 @@ public class ControladorBase implements IControladorBase {
             }
             ArrayList<String> nombresColumnasFiltradas = new ArrayList<String>();
             ArrayList<Celda> celdasCumplenCondicion = new ArrayList<Celda>();
-            /*for(Columna c : columnasAConsiderar)
+            for(Columna c : columnasAConsiderar)
             {
                 boolean columnaYaFiltrada = false;
                 for(String cf : nombresColumnasFiltradas)
@@ -732,13 +753,31 @@ public class ControladorBase implements IControladorBase {
                 }
                 if(columnaYaFiltrada == false)
                 {
-                    for(int i = 0; i<columnasAConsiderar.size(); i++)
+                    ArrayList<AbstractMap.SimpleEntry<String, String>> condicionesAux = new ArrayList<AbstractMap.SimpleEntry<String, String>>();
+                    for(int i = 0; i<condiciones.size(); i++)
                     {
-
+                        if(columnasAConsiderar.get(i).getNombre() == c.getNombre())
+                        {
+                            condicionesAux.add(condiciones.get(i));
+                        }
                     }
+                    celdasCumplenCondicion.addAll(obtenerCeldasXCondiciones(c, condicionesAux));
+                    nombresColumnasFiltradas.add(c.getNombre());
                 }
-                nombresColumnasFiltradas.add(c.getNombre());
-            }*/
+            }
+            ArrayList<Integer> numerosCeldasCumplenCondicion = new ArrayList<Integer>();
+            for(Celda c : celdasCumplenCondicion)
+            {
+                if(!numerosCeldasCumplenCondicion.contains(c.getNumero()))
+                {
+                    numerosCeldasCumplenCondicion.add(c.getNumero());
+                }
+            }
+            for(int numeroCelda : numerosCeldasCumplenCondicion)
+            {
+                modificarValorNumeroCelda(columnaAModificar, nuevoValor, numeroCelda);
+                caldasModificadas++;
+            }
         }
         else
         {
