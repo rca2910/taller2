@@ -772,10 +772,44 @@ public class ControladorBase implements IControladorBase {
                 return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionWhere], false);
             }
 
-            ArrayList<Columna> columnasAConsiderar = new ArrayList<Columna>();
+            ArrayList<Celda> celdasCumplenCondicion = new ArrayList<Celda>();
+            
+            MensajeQuery mensajeInterpretarWhere = interpretarWhere(sentencias, tablaAModificar, 7, celdasCumplenCondicion);
+            
+            if(!mensajeInterpretarWhere.isExito())
+            {
+                return mensajeInterpretarWhere;
+            }
+            
+            ArrayList<Integer> numerosCeldasCumplenCondicion = new ArrayList<Integer>();
+            for(Celda c : celdasCumplenCondicion)
+            {
+                if(!numerosCeldasCumplenCondicion.contains(c.getNumero()))
+                {
+                    numerosCeldasCumplenCondicion.add(c.getNumero());
+                }
+            }
+            for(int numeroCelda : numerosCeldasCumplenCondicion)
+            {
+                modificarValorNumeroCelda(columnaAModificar, nuevoValor, numeroCelda);
+                caldasModificadas++;
+            }
+        }
+        else
+        {
+            modificarValorTodasLasCeldas(columnaAModificar, nuevoValor);
+            caldasModificadas = columnaAModificar.getCeldas().size();
+        }
+
+        return new MensajeQuery("Ejecucion realizada con exito, se modificaron: " + caldasModificadas + " celdas", true);
+    }
+    
+    private MensajeQuery interpretarWhere(String[] sentencias, Tabla tablaAModificar, int posicionInicial, ArrayList<Celda> celdasCumplenCondicion)
+    {
+        ArrayList<Columna> columnasAConsiderar = new ArrayList<Columna>();
             ArrayList<AbstractMap.SimpleEntry<String, String>> condiciones = new ArrayList<AbstractMap.SimpleEntry<String, String>>();
 
-            int posicionRecolectarColumna = 7;
+            int posicionRecolectarColumna = posicionInicial;
             boolean condicionesRecolectadas = false;
             while(condicionesRecolectadas == false)
             {
@@ -789,7 +823,7 @@ public class ControladorBase implements IControladorBase {
                 Columna columnaAConsiderar = obtenerColumnaXNombre(tablaAModificar, sentencias[posicionRecolectarColumna]);
                 if(columnaAConsiderar == null)
                 {
-                    return new MensajeQuery("La columna" + nombreColumna + " no existe en la tabla " + nombreTabla, false);
+                    return new MensajeQuery("La columna" + sentencias[posicionRecolectarColumna] + " no existe en la tabla " + tablaAModificar.getNombre(), false);
                 }
                 columnasAConsiderar.add(columnaAConsiderar);
 
@@ -826,7 +860,6 @@ public class ControladorBase implements IControladorBase {
                 condiciones.add(condicion);
             }
             ArrayList<String> nombresColumnasFiltradas = new ArrayList<String>();
-            ArrayList<Celda> celdasCumplenCondicion = new ArrayList<Celda>();
             for(Columna c : columnasAConsiderar)
             {
                 boolean columnaYaFiltrada = false;
@@ -852,26 +885,6 @@ public class ControladorBase implements IControladorBase {
                 }
             }
             
-            ArrayList<Integer> numerosCeldasCumplenCondicion = new ArrayList<Integer>();
-            for(Celda c : celdasCumplenCondicion)
-            {
-                if(!numerosCeldasCumplenCondicion.contains(c.getNumero()))
-                {
-                    numerosCeldasCumplenCondicion.add(c.getNumero());
-                }
-            }
-            for(int numeroCelda : numerosCeldasCumplenCondicion)
-            {
-                modificarValorNumeroCelda(columnaAModificar, nuevoValor, numeroCelda);
-                caldasModificadas++;
-            }
-        }
-        else
-        {
-            modificarValorTodasLasCeldas(columnaAModificar, nuevoValor);
-            caldasModificadas = columnaAModificar.getCeldas().size();
-        }
-
-        return new MensajeQuery("Ejecucion realizada con exito, se modificaron: " + caldasModificadas + " celdas", true);
+            return new MensajeQuery("Where interpretado con exito", true);
     }
 }
