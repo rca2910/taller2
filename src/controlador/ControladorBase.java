@@ -187,7 +187,7 @@ public class ControladorBase implements IControladorBase {
                 case "SELECT":
                     return interpretarSelect(baseSeleccionada, sentencias);
                 case "CREATE":
-                    return interpretarCreate(sentencias);
+                    return interpretarCreate(baseSeleccionada, sentencias);
                 case "DELETE":
                     return interpretarDelete(sentencias);
                 case "INSERT":
@@ -292,7 +292,7 @@ public class ControladorBase implements IControladorBase {
             }
         }
 
-        if(columna.getTipo() == eTipoColumna.STRING)
+        if(columna.getTipo() == eTipoColumna.VARCHAR)
         {
             if(valor.startsWith("'") && valor.endsWith("'"))
             {
@@ -307,7 +307,7 @@ public class ControladorBase implements IControladorBase {
     private void agregarValorAColumna(Columna columna, String valor)
     {
         int numeroCelda = columna.getCeldas().size();
-        if(columna.getTipo() == eTipoColumna.STRING && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
+        if(columna.getTipo() == eTipoColumna.VARCHAR && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
         {
             valor = valor.substring(1, valor.length() - 1);
         }
@@ -354,7 +354,7 @@ public class ControladorBase implements IControladorBase {
 
     private void modificarValorTodasLasCeldas(Columna columna, String valor)
     {
-        if(columna.getTipo() == eTipoColumna.STRING && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
+        if(columna.getTipo() == eTipoColumna.VARCHAR && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
         {
             valor = valor.substring(1, valor.length() - 1);
         }
@@ -366,7 +366,7 @@ public class ControladorBase implements IControladorBase {
     
     private void modificarValorNumeroCelda(Columna columna, String valor, int numeroCelda)
     {
-        if(columna.getTipo() == eTipoColumna.STRING && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
+        if(columna.getTipo() == eTipoColumna.VARCHAR && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
         {
             valor = valor.substring(1, valor.length() - 1);
         }
@@ -396,6 +396,19 @@ public class ControladorBase implements IControladorBase {
                 return null;
         }
     }
+    
+    private eTipoColumna obtenerTipoColumnaXNombre(String nombreTipoColumna)
+    {
+        switch(nombreTipoColumna.toUpperCase())
+        {
+            case "INT":
+                return eTipoColumna.INT;
+            case "VARCHAR":
+                return eTipoColumna.VARCHAR;
+            default:
+                return null;
+        }
+    }
 
     private boolean celdaCumpleCondicion(eTipoColumna tipo, Celda celda, AbstractMap.SimpleEntry<String, String> condicion)
     {
@@ -404,7 +417,7 @@ public class ControladorBase implements IControladorBase {
             return true;
         }
         
-        if(tipo == eTipoColumna.STRING && condicion.getValue().startsWith("'") && condicion.getValue().endsWith("'") && condicion.getValue().length() > 1)
+        if(tipo == eTipoColumna.VARCHAR && condicion.getValue().startsWith("'") && condicion.getValue().endsWith("'") && condicion.getValue().length() > 1)
         {
             condicion.setValue( condicion.getValue().substring(1, condicion.getValue().length() - 1));
         }
@@ -415,7 +428,7 @@ public class ControladorBase implements IControladorBase {
             {
                 return true;
             }
-            if(tipo == eTipoColumna.STRING)
+            if(tipo == eTipoColumna.VARCHAR)
             {
                 return celda.getValor().compareTo(condicion.getValue()) > 0;
             }
@@ -429,7 +442,7 @@ public class ControladorBase implements IControladorBase {
             {
                 return true;
             }
-            if(tipo == eTipoColumna.STRING)
+            if(tipo == eTipoColumna.VARCHAR)
             {
                 return celda.getValor().compareTo(condicion.getValue()) < 0;
             }
@@ -443,7 +456,7 @@ public class ControladorBase implements IControladorBase {
             {
                 return true;
             }
-            if(tipo == eTipoColumna.STRING)
+            if(tipo == eTipoColumna.VARCHAR)
             {
                 return celda.getValor().equals(condicion.getValue());
             }
@@ -457,7 +470,7 @@ public class ControladorBase implements IControladorBase {
             {
                 return true;
             }
-            if(tipo == eTipoColumna.STRING)
+            if(tipo == eTipoColumna.VARCHAR)
             {
                 return !celda.getValor().equals(condicion.getValue());
             }
@@ -507,9 +520,82 @@ public class ControladorBase implements IControladorBase {
     }
 
     //Permite ejecutar la query Create.
-    private MensajeQuery interpretarCreate(String[] sentencias)
+    private MensajeQuery interpretarCreate(BaseDeDatos baseSeleccionada, String[] sentencias)
     {
-        return new MensajeQuery("No implementado aun", false);
+        int posicionTable = 1;
+        int posicionNombreTabla = 2;
+        int posicionColumna = 3;
+        int posicionTipoColumna = 4;
+        
+        if(!sentencias[posicionTable].equals("TABLE"))
+        {
+            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionTable], false);
+        }
+        
+        String nombreTablaACrear = sentencias[posicionNombreTabla];
+        Tabla tablaACrear = obtenerTablaXNombre(baseSeleccionada, nombreTablaACrear);
+        
+        if(tablaACrear != null)
+        {
+            return new MensajeQuery("La tabla con el nombre: " + nombreTablaACrear + " ya existe en la base de datos", false);
+        }
+        
+        tablaACrear = new Tabla(nombreTablaACrear);
+        
+        if(sentencias[posicionColumna].equals("("))
+        {
+            posicionColumna++;
+            posicionTipoColumna++;
+        }
+        else if(sentencias[posicionColumna].startsWith("("))
+        {
+            sentencias[posicionColumna] = sentencias[posicionColumna].substring(1);
+        }
+        
+        boolean finalizRecoleccionColumnas = false;
+        
+        while(finalizRecoleccionColumnas == false)
+        {
+            String nombreColumna = sentencias[posicionColumna];
+            if(sentencias[posicionTipoColumna].endsWith(","))
+            {
+                sentencias[posicionTipoColumna] = sentencias[posicionTipoColumna].substring(0, sentencias[posicionTipoColumna].length() - 1);
+            }
+            else if(sentencias[posicionTipoColumna].endsWith(")"))
+            {
+                sentencias[posicionTipoColumna] = sentencias[posicionTipoColumna].substring(0, sentencias[posicionTipoColumna].length() - 1);
+                finalizRecoleccionColumnas = true;
+            }
+            else if(sentencias[posicionTipoColumna].endsWith(");"))
+            {
+                sentencias[posicionTipoColumna] = sentencias[posicionTipoColumna].substring(0, sentencias[posicionTipoColumna].length() - 2);
+                finalizRecoleccionColumnas = true;
+            }
+            else
+            {
+                return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionTipoColumna], false);
+            }
+            
+            eTipoColumna tipoColumna = obtenerTipoColumnaXNombre(sentencias[posicionTipoColumna]);
+            if(tipoColumna == null)
+            {
+                return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionTipoColumna], false);
+            }
+            
+            Columna nuevaColumna = new Columna(nombreColumna, tipoColumna, false);
+            Mensaje agregarColumna = agregarColumna(tablaACrear, nuevaColumna);
+            if(!agregarColumna.isExito())
+            {
+                return new MensajeQuery("Verifique que no existan columnas repetidas", false);
+            }
+            
+            posicionColumna += 2;
+            posicionTipoColumna+= 2;
+        }
+        
+        agregarTabla(baseSeleccionada, tablaACrear);
+        
+        return new MensajeQuery("La tabla fue creada correctamente", true);
     }
 
     //Permite ejecutar la query Delete.
@@ -765,6 +851,7 @@ public class ControladorBase implements IControladorBase {
                     nombresColumnasFiltradas.add(c.getNombre());
                 }
             }
+            
             ArrayList<Integer> numerosCeldasCumplenCondicion = new ArrayList<Integer>();
             for(Celda c : celdasCumplenCondicion)
             {

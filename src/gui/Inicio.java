@@ -27,8 +27,8 @@ public class Inicio {
         IControladorBase controladorBase = new ControladorBase();
         controladorBase.altaBase("prueba");
         BaseDeDatos prueba = controladorBase.obtenerBaseXId(1);
-        Columna nombre = new Columna("nombre", eTipoColumna.STRING, true);
-        Columna apellido = new Columna("apellido", eTipoColumna.STRING, false);
+        Columna nombre = new Columna("nombre", eTipoColumna.VARCHAR, true);
+        Columna apellido = new Columna("apellido", eTipoColumna.VARCHAR, false);
         Columna edad = new Columna("edad", eTipoColumna.INT, true);
         ArrayList<Columna> columnas = new ArrayList<Columna>();
         columnas.add(nombre);
