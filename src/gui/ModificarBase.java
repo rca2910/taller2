@@ -12,6 +12,7 @@ public class ModificarBase extends javax.swing.JFrame {
     private BaseDeDatos baseAModificar;
     private GestionBaseDeDatosPanel panelAnterior;
     
+    //Constructor.
     public ModificarBase(GestionBaseDeDatosPanel panelAnterior, BaseDeDatos baseAModificar) {
         initComponents();
         this.fachada = new Fachada();
@@ -124,6 +125,7 @@ public class ModificarBase extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Permite modificar la base de datos.
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
 
         String nuevoNombre = this.txtNuevoNombre.getText();
@@ -139,6 +141,7 @@ public class ModificarBase extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnModificarActionPerformed
 
+    //Cancela la acción y vuelve al Panel anterior.
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
         panelAnterior.setEnabled(true);

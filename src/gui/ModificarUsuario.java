@@ -15,6 +15,7 @@ public class ModificarUsuario extends javax.swing.JFrame {
     private Usuario usuarioAModificar;
     private GestionUsuariosPanel gestionUsuariosPanel;
 
+    //Constructor.
     public ModificarUsuario(Usuario usuarioAModificar, GestionUsuariosPanel gestionUsuariosPanel) {
         initComponents();
         listarComboRoles();
@@ -167,6 +168,7 @@ public class ModificarUsuario extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Permite modificar los datos de un usuario.
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         String cedula = usuarioAModificar.getCedula();
         String nuevaCedula = this.txtCedula.getText();
@@ -186,11 +188,13 @@ public class ModificarUsuario extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnModificarActionPerformed
 
+    //Cancela la acción y vuelve al panel anterior.
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         this.dispose();
         gestionUsuariosPanel.setEnabled(true);
     }//GEN-LAST:event_btnCancelarActionPerformed
 
+    //Permite cambiar contraseña.
     private void chkCambiarContrasenaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkCambiarContrasenaActionPerformed
         if (this.chkCambiarContrasena.isSelected()) {
             this.txtContrasena.setEnabled(true);
@@ -204,11 +208,13 @@ public class ModificarUsuario extends javax.swing.JFrame {
     design del netbeans, al clickear en el combobox e ir a la pestaña code,
     el valor asignado en la propiedad typeParameter es el enum que se usa
     para el model*/
+    //Muestra los roles que puede tomar el usuario.
     private void listarComboRoles() {
         DefaultComboBoxModel modelRol = new DefaultComboBoxModel(eRolUsuario.values());
         this.comboRol.setModel(modelRol);
     }
 
+    //Muestra las versiones del programa.
     private void listarComboVersiones() {
         DefaultComboBoxModel modelVersion = new DefaultComboBoxModel(eVersionUsuario.values());
         this.comboVersion.setModel(modelVersion);

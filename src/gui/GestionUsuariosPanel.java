@@ -26,6 +26,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
     private Usuario usuarioSeleccionado;
     DefaultListModel modelUsuario = new DefaultListModel();
 
+    //Constructor.
     public GestionUsuariosPanel(Usuario usuarioLogueado) {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -221,6 +222,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Crea un usuario en el sistema.
     private void btnaltaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnaltaActionPerformed
 
         String cedula = this.txtCedula.getText();
@@ -240,6 +242,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnaltaActionPerformed
 
+    //Da de baja un usuario en el sistema.
     private void btnbajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbajaActionPerformed
         Usuario aEliminar = (Usuario) this.modelUsuario.getElementAt(this.listaUsuarios.getSelectedIndex());
         fachada.getControladorUsuario().bajaUsuario(aEliminar.getCedula());
@@ -247,22 +250,26 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         deshabilitarBotones();
     }//GEN-LAST:event_btnbajaActionPerformed
 
+    //Abre el panel modificar usuario.
     private void btnmodificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnmodificacionActionPerformed
         this.setEnabled(false);
         new ModificarUsuario(usuarioSeleccionado, this);
     }//GEN-LAST:event_btnmodificacionActionPerformed
 
+    //Cierra la sesión.
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
 
         new Login();
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
+    //Vuelve al panel anterior.
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         new AdministradorPanel(usuarioLogueado);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    //Verifica que botones le aparecerán al usuario.
     private void listaUsuariosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaUsuariosMouseClicked
         usuarioSeleccionado = (Usuario) this.modelUsuario.getElementAt(this.listaUsuarios.getSelectedIndex());
         if (usuarioSeleccionado.getCedula().equals(usuarioLogueado.getCedula())) {
@@ -272,6 +279,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_listaUsuariosMouseClicked
 
+    //Limpia los campos de ingreso de usuario.
     private void reiniciarCampos() {
         this.txtCedula.setText("");
         this.txtNombre.setText("");
@@ -281,6 +289,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         this.comboVersion.setSelectedIndex(0);
     }
 
+    //Lista los usuarios existentes en el sistema.
     public void listarUsuarios() {
         this.modelUsuario = new DefaultListModel();
         this.listaUsuarios.setModel(modelUsuario);
@@ -291,11 +300,13 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         }
     }
 
+    //Habilita los botones del panel.
     private void habilitarBotones() {
         this.btnmodificacion.setEnabled(true);
         this.btnbaja.setEnabled(true);
     }
 
+    //Deshabilita los botones del panel.
     private void deshabilitarBotones() {
         this.btnmodificacion.setEnabled(false);
         this.btnbaja.setEnabled(false);
@@ -305,11 +316,14 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
     design del netbeans, al clickear en el combobox e ir a la pestaña code,
     el valor asignado en la propiedad typeParameter es el enum que se usa
     para el model*/
+    
+    //Lista los roles que puede tener el usuario.
     private void listarComboRoles() {
         DefaultComboBoxModel modelRol = new DefaultComboBoxModel(eRolUsuario.values());
         this.comboRol.setModel(modelRol);
     }
 
+    //Lista las versiones del sistema.
     private void listarComboVersiones() {
         DefaultComboBoxModel modelVersion = new DefaultComboBoxModel(eVersionUsuario.values());
         this.comboVersion.setModel(modelVersion);

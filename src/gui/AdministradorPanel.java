@@ -19,6 +19,7 @@ public class AdministradorPanel extends javax.swing.JFrame {
     private Usuario usuarioLogueado;
     private Fachada fachada;
     
+    //Constructor.
     public AdministradorPanel(Usuario usuarioLogueado) {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -165,23 +166,27 @@ public class AdministradorPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Muestra el panel de gestión de usuario.
     private void btnAdmgestionusuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdmgestionusuarioActionPerformed
 
         new GestionUsuariosPanel(usuarioLogueado);
         this.dispose();
     }//GEN-LAST:event_btnAdmgestionusuarioActionPerformed
 
+    //Muestra el panel de gestión de base de datos.
     private void AdmgestionbaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AdmgestionbaseActionPerformed
         GestionBaseDeDatosPanel panelGestionBaseDeDatos = new GestionBaseDeDatosPanel(usuarioLogueado);
         this.dispose();
     }//GEN-LAST:event_AdmgestionbaseActionPerformed
 
+    //Cierra la sesión.
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
 
         new Login();
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
+    //Carga las bases de datos.
     private void btnImportarBasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarBasesActionPerformed
         try {
             fachada.getControladorArchivo().CargarBasesDeDatos();
@@ -193,6 +198,7 @@ public class AdministradorPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnImportarBasesActionPerformed
 
+    //Permite guardar las bases de datos.
     private void btnExportarBasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarBasesActionPerformed
         try{fachada.getControladorArchivo().GuardarBasesDeDatos();
         showMessageDialog(null, "Las bases de datos fueron exportadas exitosamente", "", JOptionPane.INFORMATION_MESSAGE);
@@ -202,6 +208,7 @@ public class AdministradorPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnExportarBasesActionPerformed
 
+    //Carga los usuarios.
     private void btnImportarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImportarUsuariosActionPerformed
         try {
             fachada.getControladorArchivo().CargarUsuarios();
@@ -213,6 +220,7 @@ public class AdministradorPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnImportarUsuariosActionPerformed
 
+    //Permite guardar los usuarios.
     private void btnExportarUsuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExportarUsuariosActionPerformed
         try{fachada.getControladorArchivo().GuardarUsuarios();
         showMessageDialog(null, "Los usuarios fueron exportados exitosamente", "", JOptionPane.INFORMATION_MESSAGE);

@@ -21,6 +21,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
     private BaseDeDatos baseSeleccionada;
     DefaultListModel modelBases = new DefaultListModel();
 
+    //Constructor.
     public GestionBaseDeDatosPanel(Usuario usuarioLogueado) {
         initComponents();
         this.controladorBase = new ControladorBase();
@@ -43,6 +44,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         }
     }
     
+    //Lista las bases de datos existentes en el sistema.
     public void listarBases()
     {
         this.modelBases = new DefaultListModel();
@@ -60,6 +62,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         
     }
 
+    //Carga la vista del usuario común.
     private void CargarVistaComun() {
         this.btnVolver.setVisible(false);
         this.txtCrear.setVisible(false);
@@ -67,6 +70,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         this.btnEliminar.setVisible(false);
     }
 
+    //Carga la vista del usuario lector.
     private void CargarVistaLector() {
         this.btnVolver.setVisible(false);
         this.txtCrear.setVisible(false);
@@ -75,12 +79,14 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         this.btnEliminar.setVisible(false);
     }
     
+    //Habilita los botones para el ABM de base de datos.
     private void habilitarBotones() {
         this.btnModificar.setEnabled(true);
         this.btnCrearTabla.setEnabled(true);
         this.btnEjecutarQuery.setEnabled(true);
     }
 
+    //Deshabilita los botones ABM de base de datos.
     private void deshabilitarBotones() {
         this.btnModificar.setEnabled(false);
         this.btnCrearTabla.setEnabled(false);
@@ -242,6 +248,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Crea la base de datos.
     private void btnCrearBaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearBaseActionPerformed
         String nombre = this.txtCrear.getText();
         Mensaje respuestaAlta = controladorBase.altaBase(nombre);
@@ -257,33 +264,39 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCrearBaseActionPerformed
 
+    //Elimina la base de datos.
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         controladorBase.bajaBase(baseSeleccionada.getId());
         deshabilitarBotones();
         this.modelBases.remove(this.listaBases.getSelectedIndex());
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    //Vuelve al panel anterior.
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         new AdministradorPanel(usuarioLogueado);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    //Permite cerrar sesión.
     private void btnCerrarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarSesionActionPerformed
 
         new Login();
         this.dispose();
     }//GEN-LAST:event_btnCerrarSesionActionPerformed
 
+    //Permite modificar el nombre de la base de datos.
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         this.setEnabled(false);
         new ModificarBase(this, baseSeleccionada);
     }//GEN-LAST:event_btnModificarActionPerformed
 
+    //Permite crear una tabla en la base de datos.
     private void btnCrearTablaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearTablaActionPerformed
         this.setEnabled(false);
         new CrearTablaBase(this, baseSeleccionada, usuarioLogueado);
     }//GEN-LAST:event_btnCrearTablaActionPerformed
 
+    //Permite listar las bases de datos que hay en el sistema.
     private void listaBasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaBasesMouseClicked
         if(this.listaBases.getSelectedIndex() >= 0)
         {
@@ -293,6 +306,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_listaBasesMouseClicked
 
+    //Abre el panel de ejecutar query.
     private void btnEjecutarQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarQueryActionPerformed
         this.setEnabled(false);
         new EjecutarQueryBase(this, baseSeleccionada.getId(), usuarioLogueado);

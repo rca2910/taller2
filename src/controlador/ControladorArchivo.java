@@ -18,6 +18,7 @@ public class ControladorArchivo implements IControladorArchivo {
     private ControladorUsuario controladorUsuario = new ControladorUsuario();
     private ControladorBase controladorBase = new ControladorBase();
     
+    //Permite escribir los datos de los usuarios en un archivo.
     public void GuardarUsuarios() throws IOException
     {
         for(Usuario u : Sistema.getInstance().getUsuarios())
@@ -28,6 +29,7 @@ public class ControladorArchivo implements IControladorArchivo {
         }
     }
     
+    //Permite escribir las bases de datos en un archivo.
     public void GuardarBasesDeDatos() throws IOException
     {
         for(BaseDeDatos b : Sistema.getInstance().getBasesDeDatos())
@@ -38,6 +40,7 @@ public class ControladorArchivo implements IControladorArchivo {
         }
     }
     
+    //Permite cargar el archivo de usuarios en el sistema.
     public void CargarUsuarios() throws IOException, ClassNotFoundException
     {
         Usuario usuario;
@@ -61,6 +64,7 @@ public class ControladorArchivo implements IControladorArchivo {
         this.cerrar();
     }
     
+    //Permite cargar el archivo de base de datos en el sistema.
     public void CargarBasesDeDatos() throws IOException, ClassNotFoundException
     {
         BaseDeDatos baseDeDatos;
@@ -83,41 +87,49 @@ public class ControladorArchivo implements IControladorArchivo {
         this.cerrar();
     }
     
+    //Permite guardar los datos de los usuarios en un archivo.
     private void abrirArchivoGuardarUsuarios() throws IOException
     {
         archivoGuardar = new FileOutputStream( "usuarios.dat" );
         salida = new ObjectOutputStream(archivoGuardar);
     }
     
+    //Carga el archivo de usuarios.
     public void abrirArchivoCargarUsuarios() throws IOException
     {
         archivoCargar = new FileInputStream( "usuarios.dat" );
         entrada = new ObjectInputStream (archivoCargar);
     }
     
+    //Permite guardar los datos de las bases de datos en un archivo
     private void abrirArchivoGuardarBasesDeDatos() throws IOException
     {
         archivoGuardar = new FileOutputStream( "bases_de_datos.dat" );
         salida = new ObjectOutputStream(archivoGuardar);
     }
     
+    //Carga el archivo de base de datos.
     private void abrirArchivoCargarBasesDeDatos() throws IOException
     {
         archivoCargar = new FileInputStream( "bases_de_datos.dat" );
         entrada = new ObjectInputStream(archivoCargar);
     }
     
+    //Escribe los datos de un usuario.
     private void escribirUsuarios (Usuario usuario) throws IOException
     {
         if (salida!=null)
             salida.writeObject(usuario);
     }
     
+    //Escribe los datos de una base de datos.
     private void escribirBasesDeDatos (BaseDeDatos baseDeDatos) throws IOException
     {
         if (salida!=null)
             salida.writeObject(baseDeDatos);
     }
+    
+    //Cierra la conexión con el archivo.
     
     private void cerrar() throws IOException
     {
@@ -125,6 +137,7 @@ public class ControladorArchivo implements IControladorArchivo {
             salida.close();
     }
     
+    //Devuelve los datos de un usuario.
     private Usuario leerUsuario () throws IOException, ClassNotFoundException
     {
         Usuario usuario = null;
@@ -140,6 +153,7 @@ public class ControladorArchivo implements IControladorArchivo {
         return usuario;
     }
     
+    //Devuelve los datos de una base de datos.
     private BaseDeDatos leerBaseDeDatos () throws IOException, ClassNotFoundException
     {
         BaseDeDatos baseDeDatos = null;

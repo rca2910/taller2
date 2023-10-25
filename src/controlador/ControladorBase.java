@@ -254,6 +254,7 @@ public class ControladorBase implements IControladorBase {
         return true;
     }
     
+    //Permite borrar todos los datos de una tabla.
     private void vaciarTabla(Tabla aVaciar)
     {
         for(Columna c : aVaciar.getColumnas())
@@ -284,6 +285,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
 
+    //Controla que los datos ingresados en la columna sean del tipo correcto.
     private boolean valorValido(Columna columna, String valor)
     {
         if(valor.toUpperCase() == "NULL" && columna.isNulleable() == false)
@@ -319,6 +321,7 @@ public class ControladorBase implements IControladorBase {
         return false;
     }
 
+    //Permite agregar un valor a una columna
     private void agregarValorAColumna(Columna columna, String valor)
     {
         int numeroCelda = columna.getCeldas().size();
@@ -329,6 +332,7 @@ public class ControladorBase implements IControladorBase {
         columna.getCeldas().add(new Celda(valor, numeroCelda));
     }
 
+    //Permite agregar los valores por defecto a una columna.
     private void agregarValorPorDefectoAColumna(Columna columna)
     {
         int numeroCelda = columna.getCeldas().size();
@@ -336,6 +340,7 @@ public class ControladorBase implements IControladorBase {
         columna.getCeldas().add(new Celda(valorPorDefecto, numeroCelda));
     }
 
+    //Devuelve un listado de las celdas que cumplen una condición.
     private ArrayList<Celda> obtenerCeldasXCondiciones(Columna columna, ArrayList<AbstractMap.SimpleEntry<String, String>> condiciones)
     {
         ArrayList<Celda> celdasEncontradas = new ArrayList<Celda>();
@@ -367,6 +372,7 @@ public class ControladorBase implements IControladorBase {
         return celdasEncontradas;
     }
 
+    //Permite cambiar el tipo de dato de todas las celdas de una columna.
     private void modificarValorTodasLasCeldas(Columna columna, String valor)
     {
         if(columna.getTipo() == eTipoColumna.VARCHAR && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
@@ -379,6 +385,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Permite cambiar de lugar la celda en una columna.
     private void modificarValorNumeroCelda(Columna columna, String valor, int numeroCelda)
     {
         if(columna.getTipo() == eTipoColumna.VARCHAR && valor.startsWith("'") && valor.endsWith("'") && valor.length() > 1)
@@ -395,6 +402,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Permite eliminar la posición de una celda en la columna.
     private void eliminarNumeroCelda(Tabla tabla, int numeroCelda)
     {
         for(Columna c : tabla.getColumnas())
@@ -411,6 +419,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
 
+    //Permite elegir la condición.
     private String formatearCondicion(String condicion)
     {
         switch(condicion)
@@ -428,6 +437,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Permite saber el tipo de dato que tiene la columna.
     private eTipoColumna obtenerTipoColumnaXNombre(String nombreTipoColumna)
     {
         switch(nombreTipoColumna.toUpperCase())
@@ -441,6 +451,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
 
+    //Permite aplicar una condición a una celda.
     private boolean celdaCumpleCondicion(eTipoColumna tipo, Celda celda, AbstractMap.SimpleEntry<String, String> condicion)
     {
         if(condicion.getKey() == "NULL" && celda.getValor().equals(null))
@@ -512,6 +523,7 @@ public class ControladorBase implements IControladorBase {
         return false;
     }
 
+    //Controla los campos para poder usar la query Select.
     private MensajeQuery interpretarSelect(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
         int largoMinimo = 2;
@@ -696,6 +708,7 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("Ejecucion realizada con exito, se eliminaron: " + numerosCeldasCumplenCondicion.size() + " celdas", true);
     }
 
+    //Permite ejecutar la query Insert.
     private MensajeQuery interpretarInsert(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
         int posicionInto = 1;
@@ -810,6 +823,7 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("Valores agregados correctamente", true);
     }
 
+    //Permite ejecutar la query Update.
     private MensajeQuery interpretarUpdate(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
         int posicionTabla = 1;
@@ -896,6 +910,7 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("Ejecucion realizada con exito, se modificaron: " + caldasModificadas + " celdas", true);
     }
     
+    //Permite aplicar la query Where.
     private MensajeQuery interpretarWhere(String[] sentencias, Tabla tablaAModificar, int posicionInicial, ArrayList<Celda> celdasCumplenCondicion)
     {
         ArrayList<Columna> columnasAConsiderar = new ArrayList<Columna>();

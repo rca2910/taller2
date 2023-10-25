@@ -18,6 +18,7 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
     private Usuario usuarioLogueado;
     private DefaultTableModel modelTablaResultado;
 
+    //Constructor.
     public EjecutarQueryBase(GestionBaseDeDatosPanel panelAnterior, int idBaseAModificar, Usuario usuarioLogueado) {
         initComponents();
         this.panelAnterior = panelAnterior;
@@ -123,6 +124,7 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Permite ejecutar la query ingresada.
     private void btnEjecutarQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarQueryActionPerformed
         String queryCompleta = this.txtQuery.getText();
         String[] queriesIndividuales = queryCompleta.split(";\\s*(\\r?\\n)?");
@@ -171,11 +173,13 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnEjecutarQueryActionPerformed
 
+    //Permite volver al panel anterior.
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         panelAnterior.setEnabled(true);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    //Permite mostrar las columnas de la tabla.
     private void mostrarColumnas(ArrayList<Columna> columnas) {
         modelTablaResultado = new DefaultTableModel();
         this.tablaResultado.setModel(modelTablaResultado);

@@ -12,6 +12,7 @@ public class Login extends javax.swing.JFrame {
 
     private Fachada fachada;
 
+    //Constructor.
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
@@ -106,6 +107,7 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Permite loguearse a un usuario.
     private void btnloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnloginActionPerformed
         String cedula = txtusuario.getText();
         String contrasena = txtcontrasena.getText();

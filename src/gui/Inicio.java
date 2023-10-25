@@ -14,6 +14,7 @@ import modelo.eVersionUsuario;
 public class Inicio {
     
     
+    //Carga el inicio del sistema.
     public static void main(String[] args) {
         
         Fachada fachada = new Fachada();

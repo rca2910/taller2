@@ -27,6 +27,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
     private ArrayList<Columna> columnasAAgregar = new ArrayList<Columna>();
     private DefaultTableModel modelTabla;
 
+    //Constuctor.
     public CrearTablaBase(GestionBaseDeDatosPanel panelAnterior, BaseDeDatos baseAModificar, Usuario usuarioLogueado) {
         initComponents();
         this.fachada = new Fachada();
@@ -295,6 +296,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //Crea la tabla.
     private void btnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCrearActionPerformed
         String nombreTabla = this.txtNombreTabla.getText();
         if(nombreTabla.isEmpty())
@@ -352,11 +354,13 @@ public class CrearTablaBase extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnCrearActionPerformed
 
+    //Vuelve al panel anterior
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed
         panelAnterior.setEnabled(true);
         this.dispose();
     }//GEN-LAST:event_btnVolverActionPerformed
 
+    //Inicializa los campos de las columnas.
     private void inicializarCamposColumnas(){
         this.txtNombreColumna1.setText("");
         this.txtNombreColumna2.setText("");
@@ -371,6 +375,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
         this.chkNulleableColumna5.setState(false);
     }
     
+    //Lista los posibles tipos de datos.
     private void listarTipoCombos() {
         DefaultComboBoxModel modelTipo1 = new DefaultComboBoxModel(eTipoColumna.values());
         this.comboTipoColumna1.setModel(modelTipo1);
@@ -384,6 +389,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
         this.comboTipoColumna5.setModel(modelTipo5);
     }
     
+    //Muestra las columnas creadas.
     private void mostrarColumnas(){
         for(Columna c : columnasAAgregar)
         {
@@ -394,6 +400,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
     /*Verifica que los nombres no esten repetidos ni se encuentren dentro de la tabla
     que se esta creando, en caso de que la tabla aun no se haya creado, solo verifica
     lo primero, los datos se almacenan en al variable columnasAAgregar*/
+    //Carga las columnas en la base de datos.
     private Mensaje cargarColumnas(){
         ArrayList<Columna> columnasAAgregarAux = new ArrayList<Columna>();
         
@@ -425,6 +432,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
         return new Mensaje("", true);
     }
     
+    //Crea la columna.
     private Columna generarColumna(JTextField campoTexto, JComboBox<eTipoColumna> comboBox, Checkbox check)
     {
         String nombreColumna = campoTexto.getText().toUpperCase();
@@ -437,6 +445,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
         return new Columna(nombreColumna, tipoColumna, nulleableColumna);
     }
     
+    //Informa si ya existe el nombre de la columna que se quiere ingresar.
     private boolean nombreColumnaRepetido(String nombre)
     {
         for(Columna c : columnasAAgregar)
