@@ -1,7 +1,6 @@
 package gui;
 
-import controlador.ControladorUsuario;
-import controlador.IControladorUsuario;
+import controlador.Fachada;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
@@ -12,7 +11,7 @@ import modelo.eVersionUsuario;
 
 public class ModificarUsuario extends javax.swing.JFrame {
 
-    private IControladorUsuario controladorUsuario;
+    private Fachada fachada;
     private Usuario usuarioAModificar;
     private GestionUsuariosPanel gestionUsuariosPanel;
 
@@ -20,7 +19,7 @@ public class ModificarUsuario extends javax.swing.JFrame {
         initComponents();
         listarComboRoles();
         listarComboVersiones();
-        this.controladorUsuario = new ControladorUsuario();
+        this.fachada = new Fachada();
         this.gestionUsuariosPanel = gestionUsuariosPanel;
         this.usuarioAModificar = usuarioAModificar;
         this.txtCedula.setText(usuarioAModificar.getCedula());
@@ -176,7 +175,7 @@ public class ModificarUsuario extends javax.swing.JFrame {
         String contrasena = this.txtContrasena.getText();
         eRolUsuario rol = this.comboRol.getModel().getElementAt(this.comboRol.getSelectedIndex());
         eVersionUsuario version = this.comboVersion.getModel().getElementAt(this.comboVersion.getSelectedIndex());
-        Mensaje modificacionUsuario = controladorUsuario.modificarUsuario(cedula, nombre, apellido, contrasena, nuevaCedula, rol, version);
+        Mensaje modificacionUsuario = fachada.getControladorUsuario().modificarUsuario(cedula, nombre, apellido, contrasena, nuevaCedula, rol, version);
         if (modificacionUsuario.isExito()) {
             gestionUsuariosPanel.listarUsuarios();
             gestionUsuariosPanel.setEnabled(true);

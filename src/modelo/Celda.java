@@ -1,6 +1,8 @@
 package modelo;
 
-public class Celda {
+import java.io.Serializable;
+
+public class Celda implements Serializable {
 
     private String valor;
     private int numero;

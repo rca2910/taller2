@@ -6,6 +6,7 @@ import modelo.Columna;
 import modelo.Mensaje;
 import modelo.MensajeQuery;
 import modelo.Tabla;
+import modelo.eVersionUsuario;
 
 
 public interface IControladorBase {
@@ -18,5 +19,5 @@ public interface IControladorBase {
     public Mensaje agregarTabla(BaseDeDatos base, Tabla tabla);
     public Mensaje agregarVariasColumnas(Tabla tabla, ArrayList<Columna> columnas);
     public Mensaje agregarColumna(Tabla tabla, Columna columna);
-    public MensajeQuery ejecutarQuery(BaseDeDatos baseSeleccionada, String query);
+    public MensajeQuery ejecutarQuery(int idBaseSeleccionada, String query, eVersionUsuario versionUsuario);
 }

@@ -1,7 +1,6 @@
 package gui;
 
-import controlador.ControladorBase;
-import controlador.IControladorBase;
+import controlador.Fachada;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import modelo.BaseDeDatos;
@@ -9,13 +8,13 @@ import modelo.Mensaje;
 
 public class ModificarBase extends javax.swing.JFrame {
 
-    private IControladorBase controladorBase;
+    private Fachada fachada;
     private BaseDeDatos baseAModificar;
     private GestionBaseDeDatosPanel panelAnterior;
     
     public ModificarBase(GestionBaseDeDatosPanel panelAnterior, BaseDeDatos baseAModificar) {
         initComponents();
-        this.controladorBase = new ControladorBase();
+        this.fachada = new Fachada();
         this.baseAModificar = baseAModificar;
         this.panelAnterior = panelAnterior;
         this.lblNombreAModificar.setText(baseAModificar.getNombre());
@@ -128,7 +127,7 @@ public class ModificarBase extends javax.swing.JFrame {
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
 
         String nuevoNombre = this.txtNuevoNombre.getText();
-        Mensaje modificarionBase = controladorBase.renombrarBase(baseAModificar.getId(), nuevoNombre);
+        Mensaje modificarionBase = fachada.getControladorBase().renombrarBase(baseAModificar.getId(), nuevoNombre);
         if(modificarionBase.isExito())
         {
             showMessageDialog(null, modificarionBase.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);

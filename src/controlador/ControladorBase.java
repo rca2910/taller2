@@ -2,6 +2,7 @@ package controlador;
 
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Iterator;
 import modelo.BaseDeDatos;
 import modelo.Celda;
 import modelo.Columna;
@@ -10,6 +11,7 @@ import modelo.MensajeQuery;
 import modelo.Sistema;
 import modelo.Tabla;
 import modelo.eTipoColumna;
+import modelo.eVersionUsuario;
 
 public class ControladorBase implements IControladorBase {
 
@@ -172,8 +174,13 @@ public class ControladorBase implements IControladorBase {
     }
 
     //Permite ejecutar una query dentro de una base de datos.
-    public MensajeQuery ejecutarQuery(BaseDeDatos baseSeleccionada, String query)
+    public MensajeQuery ejecutarQuery(int idBaseSeleccionada, String query, eVersionUsuario versionUsuario)
     {
+        BaseDeDatos baseSeleccionada = obtenerBaseXId(idBaseSeleccionada);
+        if(baseSeleccionada == null)
+        {
+            return new MensajeQuery("La base no existe en el sistema", false);
+        }
         if(query.isEmpty())
         {
             return new MensajeQuery("La query no puede estar vacia", false);
@@ -185,15 +192,15 @@ public class ControladorBase implements IControladorBase {
         try{
             switch (sentencias[0]) {
                 case "SELECT":
-                    return interpretarSelect(baseSeleccionada, sentencias);
+                    return interpretarSelect(baseSeleccionada, sentencias, versionUsuario);
                 case "CREATE":
-                    return interpretarCreate(baseSeleccionada, sentencias);
+                    return interpretarCreate(baseSeleccionada, sentencias, versionUsuario);
                 case "DELETE":
-                    return interpretarDelete(sentencias);
+                    return interpretarDelete(baseSeleccionada, sentencias, versionUsuario);
                 case "INSERT":
-                    return interpretarInsert(baseSeleccionada, sentencias);
+                    return interpretarInsert(baseSeleccionada, sentencias, versionUsuario);
                 case "UPDATE":
-                    return interpretarUpdate(baseSeleccionada, sentencias);
+                    return interpretarUpdate(baseSeleccionada, sentencias, versionUsuario);
                 default:
                     return new MensajeQuery("Error en la query en: " + sentencias[0], false);
             }
@@ -245,6 +252,14 @@ public class ControladorBase implements IControladorBase {
             return false;
         }
         return true;
+    }
+    
+    private void vaciarTabla(Tabla aVaciar)
+    {
+        for(Columna c : aVaciar.getColumnas())
+        {
+            c.setCeldas(new ArrayList<Celda>());
+        }
     }
 
     //Permite saber cuántas filas tienen las columnas de una tabla.
@@ -379,6 +394,22 @@ public class ControladorBase implements IControladorBase {
             }
         }
     }
+    
+    private void eliminarNumeroCelda(Tabla tabla, int numeroCelda)
+    {
+        for(Columna c : tabla.getColumnas())
+        {
+            Iterator<Celda> celdaIterator = c.getCeldas().iterator();
+            while(celdaIterator.hasNext())
+            {
+                Celda celda = celdaIterator.next();
+                if(celda.getNumero() == numeroCelda)
+                {
+                    celdaIterator.remove();
+                }
+            }
+        }
+    }
 
     private String formatearCondicion(String condicion)
     {
@@ -481,7 +512,7 @@ public class ControladorBase implements IControladorBase {
         return false;
     }
 
-    private MensajeQuery interpretarSelect(BaseDeDatos baseSeleccionada, String[] sentencias)
+    private MensajeQuery interpretarSelect(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
         int largoMinimo = 2;
         int posicionFrom = 2;
@@ -520,7 +551,7 @@ public class ControladorBase implements IControladorBase {
     }
 
     //Permite ejecutar la query Create.
-    private MensajeQuery interpretarCreate(BaseDeDatos baseSeleccionada, String[] sentencias)
+    private MensajeQuery interpretarCreate(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
         int posicionTable = 1;
         int posicionNombreTabla = 2;
@@ -599,12 +630,73 @@ public class ControladorBase implements IControladorBase {
     }
 
     //Permite ejecutar la query Delete.
-    private MensajeQuery interpretarDelete(String[] sentencias)
+    private MensajeQuery interpretarDelete(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
-        return new MensajeQuery("No implementado aun", false);
+        int posicionFrom = 1;
+        int posicionTabla = 2;
+
+        if(!sentencias[posicionFrom].equals("FROM"))
+        {
+            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionFrom], false);
+        }
+        
+        String nombreTabla = sentencias[posicionTabla].trim();
+        
+        if(sentencias.length == 3)
+        {
+            if(nombreTabla.endsWith(";"))
+            {
+                nombreTabla = nombreTabla.substring(0, nombreTabla.length() - 1);
+            }
+            
+            Tabla tablaABorrar = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
+            if(tablaABorrar == null)
+            {
+                return new MensajeQuery("La tabla" + nombreTabla +  " no existe en la base de datos", false);
+            }
+            vaciarTabla(tablaABorrar);
+            return new MensajeQuery("La tabla" + nombreTabla +  " fue vaciada", true);
+        }
+        
+        int posicionWhere = 3;
+
+        if(!sentencias[posicionWhere].equals("WHERE"))
+        {
+            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionWhere], false);
+        }
+
+        Tabla tablaABorrar = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
+
+        if(tablaABorrar == null)
+        {
+            return new MensajeQuery("La tabla" + nombreTabla +  " no existe en la base de datos", false);
+        }
+        
+        ArrayList<Celda> celdasCumplenCondicion = new ArrayList<Celda>();
+        MensajeQuery mensajeInterpretarWhere = interpretarWhere(sentencias, tablaABorrar, 4, celdasCumplenCondicion);
+        
+        if(!mensajeInterpretarWhere.isExito())
+        {
+            return mensajeInterpretarWhere;
+        }
+        
+        ArrayList<Integer> numerosCeldasCumplenCondicion = new ArrayList<Integer>();
+        for(Celda c : celdasCumplenCondicion)
+        {
+            if(!numerosCeldasCumplenCondicion.contains(c.getNumero()))
+            {
+                numerosCeldasCumplenCondicion.add(c.getNumero());
+            }
+        }
+        for(int numeroCelda : numerosCeldasCumplenCondicion)
+        {
+            eliminarNumeroCelda(tablaABorrar, numeroCelda);
+        }
+
+        return new MensajeQuery("Ejecucion realizada con exito, se eliminaron: " + numerosCeldasCumplenCondicion.size() + " celdas", true);
     }
 
-    private MensajeQuery interpretarInsert(BaseDeDatos baseSeleccionada, String[] sentencias)
+    private MensajeQuery interpretarInsert(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
         int posicionInto = 1;
         int posicionTabla = 2;
@@ -718,7 +810,7 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("Valores agregados correctamente", true);
     }
 
-    private MensajeQuery interpretarUpdate(BaseDeDatos baseSeleccionada, String[] sentencias)
+    private MensajeQuery interpretarUpdate(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
         int posicionTabla = 1;
         int posicionSet = 2;

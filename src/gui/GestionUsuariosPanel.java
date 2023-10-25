@@ -4,8 +4,7 @@
  */
 package gui;
 
-import controlador.ControladorUsuario;
-import controlador.IControladorUsuario;
+import controlador.Fachada;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -22,7 +21,7 @@ import modelo.eVersionUsuario;
  */
 public class GestionUsuariosPanel extends javax.swing.JFrame {
 
-    private IControladorUsuario controladorUsuario;
+    private Fachada fachada;
     private Usuario usuarioLogueado;
     private Usuario usuarioSeleccionado;
     DefaultListModel modelUsuario = new DefaultListModel();
@@ -32,7 +31,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.usuarioLogueado = usuarioLogueado;
-        this.controladorUsuario = new ControladorUsuario();
+        this.fachada = new Fachada();
         listarUsuarios();
         listarComboRoles();
         listarComboVersiones();
@@ -230,7 +229,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         String contrasena = this.txtContrasena.getText();
         eRolUsuario rol = this.comboRol.getModel().getElementAt(this.comboRol.getSelectedIndex());
         eVersionUsuario version = this.comboVersion.getModel().getElementAt(this.comboVersion.getSelectedIndex());
-        Mensaje respuestaAlta = controladorUsuario.altaUsuario(cedula, nombre, apellido, contrasena, rol, version);
+        Mensaje respuestaAlta = fachada.getControladorUsuario().altaUsuario(cedula, nombre, apellido, contrasena, rol, version);
         if (respuestaAlta.isExito()) {
             reiniciarCampos();
             listarUsuarios();
@@ -243,7 +242,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
 
     private void btnbajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbajaActionPerformed
         Usuario aEliminar = (Usuario) this.modelUsuario.getElementAt(this.listaUsuarios.getSelectedIndex());
-        controladorUsuario.bajaUsuario(aEliminar.getCedula());
+        fachada.getControladorUsuario().bajaUsuario(aEliminar.getCedula());
         this.modelUsuario.remove(this.listaUsuarios.getSelectedIndex());
         deshabilitarBotones();
     }//GEN-LAST:event_btnbajaActionPerformed
@@ -286,7 +285,7 @@ public class GestionUsuariosPanel extends javax.swing.JFrame {
         this.modelUsuario = new DefaultListModel();
         this.listaUsuarios.setModel(modelUsuario);
 
-        ArrayList<Usuario> usuarios = controladorUsuario.obtenerUsuarios();
+        ArrayList<Usuario> usuarios = fachada.getControladorUsuario().obtenerUsuarios();
         for (Usuario u : usuarios) {
             modelUsuario.addElement(u);
         }

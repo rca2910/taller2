@@ -1,9 +1,10 @@
 package modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Tabla {
+public class Tabla implements Serializable {
 
     private String nombre;
     private ArrayList<Columna> columnas;

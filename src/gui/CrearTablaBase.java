@@ -1,7 +1,7 @@
 package gui;
 
 import controlador.ControladorBase;
-import controlador.IControladorBase;
+import controlador.Fachada;
 import java.awt.Checkbox;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
@@ -20,7 +20,7 @@ import modelo.eTipoColumna;
 public class CrearTablaBase extends javax.swing.JFrame {
     
     private GestionBaseDeDatosPanel panelAnterior;
-    private IControladorBase controladorBase;
+    private Fachada fachada;
     private BaseDeDatos baseAModificar;
     private Usuario usuarioLogueado;
     private Tabla tablaACrear = null;
@@ -29,7 +29,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
 
     public CrearTablaBase(GestionBaseDeDatosPanel panelAnterior, BaseDeDatos baseAModificar, Usuario usuarioLogueado) {
         initComponents();
-        this.controladorBase = new ControladorBase();
+        this.fachada = new Fachada();
         this.panelAnterior = panelAnterior;
         this.baseAModificar = baseAModificar;
         this.usuarioLogueado = usuarioLogueado;
@@ -321,7 +321,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
             }
             
             tablaACrear = new Tabla(nombreTabla.toUpperCase(), columnasAAgregar);
-            Mensaje respuestaAgregarTabla = controladorBase.agregarTabla(baseAModificar, tablaACrear);
+            Mensaje respuestaAgregarTabla = fachada.getControladorBase().agregarTabla(baseAModificar, tablaACrear);
             if(respuestaAgregarTabla.isExito())
             {
                 showMessageDialog(null, respuestaAgregarTabla.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);
@@ -338,7 +338,7 @@ public class CrearTablaBase extends javax.swing.JFrame {
         }
         else
         {
-            Mensaje respuestaAgregarVariasColumnas = controladorBase.agregarVariasColumnas(tablaACrear, columnasAAgregar);
+            Mensaje respuestaAgregarVariasColumnas = fachada.getControladorBase().agregarVariasColumnas(tablaACrear, columnasAAgregar);
             if(respuestaAgregarVariasColumnas.isExito())
             {
                 showMessageDialog(null, respuestaAgregarVariasColumnas.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);

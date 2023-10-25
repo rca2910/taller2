@@ -1,33 +1,28 @@
 package gui;
 
-import controlador.ControladorBase;
-import controlador.IControladorBase;
+import controlador.Fachada;
 import java.util.ArrayList;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
-import modelo.BaseDeDatos;
 import modelo.Celda;
 import modelo.Columna;
-import modelo.Mensaje;
 import modelo.MensajeQuery;
-import modelo.Tabla;
 import modelo.Usuario;
 
 public class EjecutarQueryBase extends javax.swing.JFrame {
 
     private GestionBaseDeDatosPanel panelAnterior;
-    private IControladorBase controladorBase;
-    private BaseDeDatos baseAModificar;
+    private Fachada fachada;
+    private int idBaseAModificar;
     private Usuario usuarioLogueado;
     private DefaultTableModel modelTablaResultado;
 
     public EjecutarQueryBase(GestionBaseDeDatosPanel panelAnterior, int idBaseAModificar, Usuario usuarioLogueado) {
         initComponents();
         this.panelAnterior = panelAnterior;
-        this.controladorBase = new ControladorBase();
-        this.baseAModificar = controladorBase.obtenerBaseXId(idBaseAModificar);
+        this.fachada = new Fachada();
+        this.idBaseAModificar = idBaseAModificar;
         this.usuarioLogueado = usuarioLogueado;
         this.modelTablaResultado = (DefaultTableModel) tablaResultado.getModel();
         this.setLocationRelativeTo(null);
@@ -129,15 +124,51 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEjecutarQueryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEjecutarQueryActionPerformed
-        String query = this.txtQuery.getText();
-        MensajeQuery ejecucion = controladorBase.ejecutarQuery(baseAModificar, query);
+        String queryCompleta = this.txtQuery.getText();
+        String[] queriesIndividuales = queryCompleta.split(";\\s*(\\r?\\n)?");
         
-        if (ejecucion.isExito()) {
+        if(queriesIndividuales.length > 1)
+        {
+            int queriesEjecutadas = 0;
+            MensajeQuery ejecucion = new MensajeQuery("", false);
+            for(String query : queriesIndividuales)
+            {
+                ejecucion = fachada.getControladorBase().ejecutarQuery(idBaseAModificar, query, usuarioLogueado.getVersionUsuario());
+                if(ejecucion.isExito())
+                {
+                    queriesEjecutadas++;
+                }
+                else
+                {
+                    showMessageDialog(null, "Se ejecutaron: " + queriesEjecutadas + " queries, pero hubo un fallo en la numero " + queriesEjecutadas++, "", JOptionPane.ERROR_MESSAGE);
+                    showMessageDialog(null, ejecucion.getMensaje(), "", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            if (ejecucion.isExito()) {
+            showMessageDialog(null, "Se ejecutaron: " + queriesEjecutadas + " queries correctamente, a continuacion se mostrará el último resultado", "", JOptionPane.INFORMATION_MESSAGE);
             showMessageDialog(null, ejecucion.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);
             mostrarColumnas(ejecucion.getColumnas());
-        } else {
-            showMessageDialog(null, ejecucion.getMensaje(), "", JOptionPane.ERROR_MESSAGE);
+            } else {
+                showMessageDialog(null, ejecucion.getMensaje(), "", JOptionPane.ERROR_MESSAGE);
+            }
         }
+        else
+        {
+            if(queryCompleta.endsWith(";"))
+            {
+                queryCompleta = queryCompleta.substring(0, queryCompleta.length() - 1);
+            }
+            MensajeQuery ejecucion = fachada.getControladorBase().ejecutarQuery(idBaseAModificar, queryCompleta, usuarioLogueado.getVersionUsuario());
+            
+            if (ejecucion.isExito()) {
+            showMessageDialog(null, ejecucion.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);
+            mostrarColumnas(ejecucion.getColumnas());
+            } else {
+                showMessageDialog(null, ejecucion.getMensaje(), "", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
     }//GEN-LAST:event_btnEjecutarQueryActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed

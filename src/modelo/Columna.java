@@ -1,11 +1,11 @@
 
 package modelo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 
-public class Columna {
+public class Columna implements Serializable {
     
     private String nombre;
     private ArrayList<Celda> celdas;

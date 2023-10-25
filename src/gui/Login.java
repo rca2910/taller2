@@ -1,11 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui;
 
-import controlador.ControladorUsuario;
-import controlador.IControladorUsuario;
+import controlador.Fachada;
 import static javax.swing.JOptionPane.showMessageDialog;
 import modelo.Usuario;
 
@@ -15,13 +10,13 @@ import modelo.Usuario;
  */
 public class Login extends javax.swing.JFrame {
 
-    private IControladorUsuario controladorUsuario;
+    private Fachada fachada;
 
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setVisible(true);
-        this.controladorUsuario = new ControladorUsuario();;
+        this.fachada = new Fachada();;
     }
 
     /**
@@ -115,7 +110,7 @@ public class Login extends javax.swing.JFrame {
         String cedula = txtusuario.getText();
         String contrasena = txtcontrasena.getText();
 
-        Usuario usuario = controladorUsuario.login(cedula, contrasena);
+        Usuario usuario = fachada.getControladorUsuario().login(cedula, contrasena);
 
         if (usuario == null) {
             showMessageDialog(null, "Cédula o contraseña incorrecta");

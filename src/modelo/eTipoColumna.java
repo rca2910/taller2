@@ -1,7 +1,9 @@
 
 package modelo;
 
+import java.io.Serializable;
 
-public enum eTipoColumna {
-    INT, VARCHAR;
+
+public enum eTipoColumna implements Serializable {
+    INT, VARCHAR, DATE, BOOL;
 }

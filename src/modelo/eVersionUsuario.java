@@ -1,5 +1,7 @@
 package modelo;
 
-public enum eVersionUsuario {
+import java.io.Serializable;
+
+public enum eVersionUsuario implements Serializable {
     DEMO, FULL
 }
