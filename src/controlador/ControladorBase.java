@@ -1,5 +1,8 @@
 package controlador;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -280,13 +283,17 @@ public class ControladorBase implements IControladorBase {
         switch (columna.getTipo()) {
             case INT:
                 return "0";
+            case DATE:
+                return "0001-01-01";
+            case BOOL:
+                return "FALSE";
             default:
                 return "";
         }
     }
 
     //Controla que los datos ingresados en la columna sean del tipo correcto.
-    private boolean valorValido(Columna columna, String valor)
+    private boolean valorValido(Columna columna, String valor, eVersionUsuario versionUsuario)
     {
         if(valor.toUpperCase() == "NULL" && columna.isNulleable() == false)
         {
@@ -316,6 +323,38 @@ public class ControladorBase implements IControladorBase {
                 return true;
             }
             return false;
+        }
+        
+        if(columna.getTipo() == eTipoColumna.BOOL && versionUsuario == eVersionUsuario.FULL)
+        {
+            if(valor.equals("TRUE") || valor.equals("FALSE"))
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        if(columna.getTipo() == eTipoColumna.DATE && versionUsuario == eVersionUsuario.FULL)
+        {
+            String valorAux = valor;
+            if(valorAux.startsWith("'") && valorAux.endsWith("'"))
+            {
+                valorAux = valorAux.substring(1, valorAux.length() - 1);
+            }
+            else
+            {
+                return false;
+            }
+            DateTimeFormatter formateador = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            try 
+            {
+                LocalDate.parse(valorAux, formateador);
+                return true;
+            } 
+            catch (DateTimeParseException e) 
+            {
+                return false;
+            }
         }
 
         return false;
@@ -450,6 +489,54 @@ public class ControladorBase implements IControladorBase {
                 return null;
         }
     }
+    
+    private Celda obtenerCeldaXNumero(Columna columna, int numeroCelda)
+    {
+        for(Celda celda : columna.getCeldas())
+        {
+            if(celda.getNumero() == numeroCelda)
+            {
+                return celda;
+            }
+        }
+        return null;
+    }
+    
+    private Celda obtenerMayorCelda(Columna columna)
+    {
+        if(columna.getTipo() != eTipoColumna.INT)
+        {
+            return null;
+        }
+        Celda mayor = null;
+        for(Celda celda : columna.getCeldas())
+        {
+            if(mayor == null || Integer.parseInt(celda.getValor()) > Integer.parseInt(mayor.getValor()))
+            {
+                mayor = celda;
+            }
+        }
+        
+        return mayor;
+    }
+    
+    private Celda obtenerMenorCelda(Columna columna)
+    {
+        if(columna.getTipo() != eTipoColumna.INT)
+        {
+            return null;
+        }
+        Celda menor = null;
+        for(Celda celda : columna.getCeldas())
+        {
+            if(menor == null || Integer.parseInt(celda.getValor()) < Integer.parseInt(menor.getValor()))
+            {
+                menor = celda;
+            }
+        }
+        
+        return menor;
+    }
 
     //Permite aplicar una condición a una celda.
     private boolean celdaCumpleCondicion(eTipoColumna tipo, Celda celda, AbstractMap.SimpleEntry<String, String> condicion)
@@ -526,40 +613,160 @@ public class ControladorBase implements IControladorBase {
     //Controla los campos para poder usar la query Select.
     private MensajeQuery interpretarSelect(BaseDeDatos baseSeleccionada, String[] sentencias, eVersionUsuario versionUsuario)
     {
-        int largoMinimo = 2;
-        int posicionFrom = 2;
-        int posicionPrimerTabla = 3;
-        int posicionColumnaSeleccionada = 1;
-
-        if (sentencias.length < largoMinimo) {
+        if(versionUsuario == eVersionUsuario.FULL)
+        {
+            if((sentencias[1].startsWith("MAX(") || sentencias[1].startsWith("MIN(")) && sentencias[1].endsWith(")"))
+            {
+                if(sentencias.length > 4)
+                {
+                    return new MensajeQuery("Verifique las sentencias, MAX y MIN solo estan permitidos para 1 tabla", false);
+                }
+                
+                int posicionFrom = 2;
+                int posicionTabla = 3;
+                boolean esMax = false;
+                
+                if(!sentencias[posicionFrom].equals("FROM"))
+                {
+                    return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionFrom] + " recuerde que esta usando una version demo", false);
+                }
+                
+                if(sentencias[1].startsWith("MAX("))
+                {
+                    esMax = true;
+                }
+                
+                String nombreTabla = sentencias[posicionTabla];
+                
+                Tabla tablaSeleccionada = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
+                if(tablaSeleccionada == null)
+                {
+                    return new MensajeQuery("La tabla: " + sentencias[posicionTabla] + " no existe en la base de datos", false);
+                }
+                
+                String nombreColumna = sentencias[1].substring(4, sentencias[1].length() - 1);
+                Columna columnaSeleccionada = obtenerColumnaXNombre(tablaSeleccionada, nombreColumna);
+            
+                if(columnaSeleccionada == null)
+                {
+                    return new MensajeQuery("La columna: " + nombreColumna + " no existe en la tabla seleccionada", false);
+                }
+                
+                if(esMax)
+                {
+                    return interpretarMax(columnaSeleccionada);
+                }
+                else
+                {
+                    return interpretarMin(columnaSeleccionada);
+                }
+            }
+            
+            int posicionActual = 1;
+            ArrayList<String> nombresColumnasSeleccionadas = new ArrayList<String>();
+            
+            while(!sentencias[posicionActual].equals("FROM"))
+            {
+                nombresColumnasSeleccionadas.add(sentencias[posicionActual]);
+                posicionActual++;
+            }
+            posicionActual++;
+            
+            //ArrayList<String> nombresTablasSe
+            
             return new MensajeQuery("La sentencia SELECT parece incompleta", false);
         }
-
-        if(!sentencias[posicionFrom].equals("FROM"))
+        else
         {
-            return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionFrom], false);
+            int largoMinimo = 4;
+            if (sentencias.length < largoMinimo) 
+            {
+                return new MensajeQuery("La sentencia SELECT parece incompleta", false);
+            }
+            
+            int posicionColumna = 1;
+            int posicionFrom = 2;
+            int posicionTabla = 3;
+            
+            if(!sentencias[posicionFrom].equals("FROM"))
+            {
+                return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionFrom] + " recuerde que esta usando una version demo", false);
+            }
+            
+            String nombreTabla = sentencias[posicionTabla];
+            Tabla tablaSeleccionada = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
+            
+            if(tablaSeleccionada == null)
+            {
+                return new MensajeQuery("La tabla: " + sentencias[posicionTabla] + " no existe en la base de datos", false);
+            }
+            
+            String nombreColumna = sentencias[posicionColumna];
+            Columna columnaSeleccionada = obtenerColumnaXNombre(tablaSeleccionada, nombreColumna);
+            
+            if(columnaSeleccionada == null)
+            {
+                return new MensajeQuery("La columna: " + sentencias[posicionColumna] + " no existe en la tabla seleccionada", false);
+            }
+            
+            ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
+            
+            if(sentencias.length == largoMinimo)
+            {
+                columnasResultado.add(columnaSeleccionada);
+                return new MensajeQuery("Sentencia ejecutada correctamente", true, columnasResultado);
+            }
+            
+            int posicionWhere = 4;
+            largoMinimo = 8;
+            
+            if(!sentencias[posicionFrom].equals("WHERE"))
+            {
+                return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionWhere] + " recuerde que esta usando una version demo", false);
+            }
+            
+            if(sentencias.length > largoMinimo)
+            {
+                columnasResultado.add(columnaSeleccionada);
+                return new MensajeQuery("Recuerde que esta usando una version demo, solo se puede utilizar 1 sentencia WHERE", false);
+            }
+            
+            int posicionColumnaFiltro = 5;
+            String nombreColumnaFiltro = sentencias[posicionColumnaFiltro];
+            Columna columnaFiltro = obtenerColumnaXNombre(tablaSeleccionada, nombreColumnaFiltro);
+            
+            if(columnaFiltro == null)
+            {
+                return new MensajeQuery("La columna: " + sentencias[posicionColumnaFiltro] + " no existe en la tabla seleccionada", false);
+            }
+            
+            int posicionCondicionFiltro = 6;
+            if(!sentencias[posicionCondicionFiltro].equals("="))
+            {
+                return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionCondicionFiltro] + " recuerde que esta usando una version demo", false);
+            }
+            String condicionAConsiderar = formatearCondicion(sentencias[posicionCondicionFiltro]);
+            
+            int posicionValorFiltro = 7;
+            
+            String valorAConsiderar = sentencias[posicionValorFiltro];
+            if(!valorValido(columnaFiltro, valorAConsiderar, versionUsuario))
+            {
+                return new MensajeQuery("Verifique que valor de: " + valorAConsiderar + " sea valido para la columna, recuerde que su version solo filtra por int o varchar ", false);
+            }
+            AbstractMap.SimpleEntry<String, String> condicion = new AbstractMap.SimpleEntry<String, String>(condicionAConsiderar, valorAConsiderar);
+            ArrayList<AbstractMap.SimpleEntry<String, String>> condiciones = new ArrayList<AbstractMap.SimpleEntry<String, String>>();
+            condiciones.add(condicion);
+            ArrayList<Celda> celdasFiltradas = obtenerCeldasXCondiciones(columnaFiltro, condiciones);
+            Columna columnaARetornar = new Columna(columnaSeleccionada.getNombre(), columnaSeleccionada.getTipo(), columnaSeleccionada.isNulleable());
+            for(Celda c : celdasFiltradas)
+            {
+                Celda celdaFiltrada = obtenerCeldaXNumero(columnaSeleccionada, c.getNumero());
+                columnaARetornar.getCeldas().add(celdaFiltrada);
+            }
+            columnasResultado.add(columnaARetornar);
+            return new MensajeQuery("Sentencia ejecutada correctamente", true, columnasResultado);
         }
-
-        String nombreTabla = sentencias[posicionPrimerTabla];
-        Tabla tablaSeleccionada = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
-
-        if(tablaSeleccionada == null)
-        {
-            return new MensajeQuery("La tabla: " + sentencias[posicionPrimerTabla] + "no existe en la base de datos", false);
-        }
-
-        String nombreColumna = sentencias[posicionColumnaSeleccionada];
-        Columna columnaSeleccionada = obtenerColumnaXNombre(tablaSeleccionada, nombreColumna);
-
-        if(columnaSeleccionada == null)
-        {
-            return new MensajeQuery("La columna: " + sentencias[posicionColumnaSeleccionada] + "no existe en la tabla seleccionada", false);
-        }
-
-        ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
-        columnasResultado.add(columnaSeleccionada);//Esto es solo para probar
-
-        return new MensajeQuery("Sentencia ejecutada correctamente", true, columnasResultado);
     }
 
     //Permite ejecutar la query Create.
@@ -685,7 +892,7 @@ public class ControladorBase implements IControladorBase {
         }
         
         ArrayList<Celda> celdasCumplenCondicion = new ArrayList<Celda>();
-        MensajeQuery mensajeInterpretarWhere = interpretarWhere(sentencias, tablaABorrar, 4, celdasCumplenCondicion);
+        MensajeQuery mensajeInterpretarWhere = interpretarWhere(sentencias, tablaABorrar, 4, celdasCumplenCondicion, versionUsuario);
         
         if(!mensajeInterpretarWhere.isExito())
         {
@@ -793,7 +1000,7 @@ public class ControladorBase implements IControladorBase {
             {
                 return new MensajeQuery("La columna: " + nombresColumnas.get(i) + " no existe en la tabla " + nombreTabla, false);
             }
-            if(!valorValido(columnaAVerificar, valoresAAgregar.get(i)))
+            if(!valorValido(columnaAVerificar, valoresAAgregar.get(i), versionUsuario))
             {
                 return new MensajeQuery("El valor de: " + valoresAAgregar.get(i) + " no es valido para la columna " + nombresColumnas.get(i), false);
             }
@@ -862,7 +1069,7 @@ public class ControladorBase implements IControladorBase {
             return new MensajeQuery("La columna" + nombreColumna + " no existe en la tabla " + nombreTabla, false);
         }
 
-        if(!valorValido(columnaAModificar, nuevoValor))
+        if(!valorValido(columnaAModificar, nuevoValor, versionUsuario))
         {
             return new MensajeQuery("El valor de: " + nuevoValor + " no es valido para la columna " + nombreColumna, false);
         }
@@ -880,7 +1087,7 @@ public class ControladorBase implements IControladorBase {
 
             ArrayList<Celda> celdasCumplenCondicion = new ArrayList<Celda>();
             
-            MensajeQuery mensajeInterpretarWhere = interpretarWhere(sentencias, tablaAModificar, 7, celdasCumplenCondicion);
+            MensajeQuery mensajeInterpretarWhere = interpretarWhere(sentencias, tablaAModificar, 7, celdasCumplenCondicion, versionUsuario);
             
             if(!mensajeInterpretarWhere.isExito())
             {
@@ -911,61 +1118,61 @@ public class ControladorBase implements IControladorBase {
     }
     
     //Permite aplicar la query Where.
-    private MensajeQuery interpretarWhere(String[] sentencias, Tabla tablaAModificar, int posicionInicial, ArrayList<Celda> celdasCumplenCondicion)
+    private MensajeQuery interpretarWhere(String[] sentencias, Tabla tablaAModificar, int posicionInicial, ArrayList<Celda> celdasCumplenCondicion, eVersionUsuario versionUsuario)
     {
         ArrayList<Columna> columnasAConsiderar = new ArrayList<Columna>();
-            ArrayList<AbstractMap.SimpleEntry<String, String>> condiciones = new ArrayList<AbstractMap.SimpleEntry<String, String>>();
+        ArrayList<AbstractMap.SimpleEntry<String, String>> condiciones = new ArrayList<AbstractMap.SimpleEntry<String, String>>();
 
-            int posicionRecolectarColumna = posicionInicial;
-            boolean condicionesRecolectadas = false;
-            while(condicionesRecolectadas == false)
+        int posicionRecolectarColumna = posicionInicial;
+        boolean condicionesRecolectadas = false;
+        while(condicionesRecolectadas == false)
+        {
+            int posicionRecolectarCondicion = posicionRecolectarColumna +1;
+            if(sentencias[posicionRecolectarCondicion].equals("IS"))
             {
-                int posicionRecolectarCondicion = posicionRecolectarColumna +1;
-                if(sentencias[posicionRecolectarCondicion].equals("IS"))
-                {
-                    posicionRecolectarCondicion++;
-                }
-                int posicionRecolectarValor = posicionRecolectarCondicion +1;
+                posicionRecolectarCondicion++;
+            }
+            int posicionRecolectarValor = posicionRecolectarCondicion +1;
 
-                Columna columnaAConsiderar = obtenerColumnaXNombre(tablaAModificar, sentencias[posicionRecolectarColumna]);
-                if(columnaAConsiderar == null)
-                {
-                    return new MensajeQuery("La columna" + sentencias[posicionRecolectarColumna] + " no existe en la tabla " + tablaAModificar.getNombre(), false);
-                }
-                columnasAConsiderar.add(columnaAConsiderar);
+            Columna columnaAConsiderar = obtenerColumnaXNombre(tablaAModificar, sentencias[posicionRecolectarColumna]);
+            if(columnaAConsiderar == null)
+            {
+                return new MensajeQuery("La columna" + sentencias[posicionRecolectarColumna] + " no existe en la tabla " + tablaAModificar.getNombre(), false);
+            }
+            columnasAConsiderar.add(columnaAConsiderar);
 
-                String condicionAConsiderar = formatearCondicion(sentencias[posicionRecolectarCondicion]);
-                if(condicionAConsiderar == null)
-                {
-                    return new MensajeQuery("Verifique la condicion: " + sentencias[posicionRecolectarCondicion], false);
-                }
+            String condicionAConsiderar = formatearCondicion(sentencias[posicionRecolectarCondicion]);
+            if(condicionAConsiderar == null)
+            {
+                return new MensajeQuery("Verifique la condicion: " + sentencias[posicionRecolectarCondicion], false);
+            }
 
-                String valorAConsiderar = sentencias[posicionRecolectarValor];
+            String valorAConsiderar = sentencias[posicionRecolectarValor];
 
-                if(sentencias.length == posicionRecolectarValor +1)
+            if(sentencias.length == posicionRecolectarValor +1)
+            {
+            if(valorAConsiderar.endsWith(";"))
+            {
+                valorAConsiderar = valorAConsiderar.substring(0, valorAConsiderar.length() - 1);
+            }
+            condicionesRecolectadas = true;
+            }
+            else
+            {
+                posicionRecolectarColumna = posicionRecolectarValor +1;
+                if(!sentencias[posicionRecolectarColumna].equals("AND"))
                 {
-                    if(valorAConsiderar.endsWith(";"))
-                    {
-                        valorAConsiderar = valorAConsiderar.substring(0, valorAConsiderar.length() - 1);
-                    }
-                    condicionesRecolectadas = true;
+                    return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionRecolectarColumna], false);
                 }
-                else
-                {
-                    posicionRecolectarColumna = posicionRecolectarValor +1;
-                    if(!sentencias[posicionRecolectarColumna].equals("AND"))
-                    {
-                        return new MensajeQuery("Verifique la sentencia en: " + sentencias[posicionRecolectarColumna], false);
-                    }
                 }
 
-                if(!valorValido(columnaAConsiderar, valorAConsiderar))
+                if(!valorValido(columnaAConsiderar, valorAConsiderar, versionUsuario))
                 {
                     return new MensajeQuery("El valor de: " + valorAConsiderar + " no es valido para la columna " + columnaAConsiderar, false);
                 }
                 AbstractMap.SimpleEntry<String, String> condicion = new AbstractMap.SimpleEntry<String, String>(condicionAConsiderar, valorAConsiderar);
                 condiciones.add(condicion);
-            }
+        }
             ArrayList<String> nombresColumnasFiltradas = new ArrayList<String>();
             for(Columna c : columnasAConsiderar)
             {
@@ -993,5 +1200,41 @@ public class ControladorBase implements IControladorBase {
             }
             
             return new MensajeQuery("Where interpretado con exito", true);
+    }
+    
+    private MensajeQuery interpretarMax(Columna columnaSeleccionada)
+    {
+        Celda mayorCelda = obtenerMayorCelda(columnaSeleccionada);
+        ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
+        Columna columnaRetorno = new Columna(columnaSeleccionada.getNombre() +" (MAX)", columnaSeleccionada.getTipo(), columnaSeleccionada.isNulleable());
+        if(mayorCelda == null)
+        {
+            columnasResultado.add(columnaRetorno);
+            return new MensajeQuery("Verifique que la columna sea numerica y tenga algun valor", false, columnasResultado);
+        }
+        else
+        {
+            ArrayList<Celda> celdasAAgregar = new ArrayList<Celda>();
+            columnaRetorno.setCeldas(celdasAAgregar);
+            return new MensajeQuery("Max interpretado con exito", true, columnasResultado);
+        }
+    }
+    
+    private MensajeQuery interpretarMin(Columna columnaSeleccionada)
+    {
+        Celda menorCelda = obtenerMenorCelda(columnaSeleccionada);
+        ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
+        Columna columnaRetorno = new Columna(columnaSeleccionada.getNombre() +" (MIN)", columnaSeleccionada.getTipo(), columnaSeleccionada.isNulleable());
+        if(menorCelda == null)
+        {
+            columnasResultado.add(columnaRetorno);
+            return new MensajeQuery("Verifique que la columna sea numerica y tenga algun valor", false, columnasResultado);
+        }
+        else
+        {
+            ArrayList<Celda> celdasAAgregar = new ArrayList<Celda>();
+            columnaRetorno.setCeldas(celdasAAgregar);
+            return new MensajeQuery("Min interpretado con exito", true, columnasResultado);
+        }
     }
 }

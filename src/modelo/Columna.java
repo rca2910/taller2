@@ -14,17 +14,17 @@ public class Columna implements Serializable {
 
     // Constructores
     
-    public Columna(String nombre, ArrayList<Celda> celda, eTipoColumna estado, boolean nulleable) {
+    public Columna(String nombre, ArrayList<Celda> celda, eTipoColumna tipo, boolean nulleable) {
         this.nombre = nombre = nombre.toUpperCase();
         this.celdas = celda;
-        this.tipo = estado;
+        this.tipo = tipo;
         this.nulleable = nulleable;
     }
     
-    public Columna(String nombre, eTipoColumna estado, boolean nulleable) {
+    public Columna(String nombre, eTipoColumna tipo, boolean nulleable) {
         this.nombre = nombre.toUpperCase();
         this.celdas = new ArrayList<Celda>();
-        this.tipo = estado;
+        this.tipo = tipo;
         this.nulleable = nulleable;
     }
 
