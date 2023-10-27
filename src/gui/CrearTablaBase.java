@@ -322,6 +322,11 @@ public class CrearTablaBase extends javax.swing.JFrame {
                 showMessageDialog(null, "No puede crearse una tabla sin columnas", "", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            if(columnasAAgregar.size() > 3 && usuarioLogueado.getVersionUsuario() == eVersionUsuario.DEMO)
+            {
+                showMessageDialog(null, "Su version solo permite crear 3 columnas", "", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             
             tablaACrear = new Tabla(nombreTabla.toUpperCase(), columnasAAgregar);
             Mensaje respuestaAgregarTabla = fachada.getControladorBase().agregarTabla(baseAModificar, tablaACrear);
@@ -341,6 +346,11 @@ public class CrearTablaBase extends javax.swing.JFrame {
         }
         else
         {
+            if(usuarioLogueado.getVersionUsuario() == eVersionUsuario.DEMO)
+            {
+                showMessageDialog(null, "Su version solo permite crear 3 columnas", "", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             Mensaje respuestaAgregarVariasColumnas = fachada.getControladorBase().agregarVariasColumnas(tablaACrear, columnasAAgregar);
             if(respuestaAgregarVariasColumnas.isExito())
             {
