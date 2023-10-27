@@ -1264,6 +1264,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Permite aplicar la query ShowTables.
     private MensajeQuery mostrarTablas(BaseDeDatos baseSeleccionada, String[] sentencias)
     {
         ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
@@ -1278,6 +1279,7 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("Show tables interpretado con exito", true, columnasResultado);
     }
     
+    //Permite aplicar la query Describe.
     private MensajeQuery describeTabla(BaseDeDatos baseSeleccionada, String[] sentencias)
     {
         ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
@@ -1322,6 +1324,7 @@ public class ControladorBase implements IControladorBase {
         return new MensajeQuery("Describe interpretado con exito", true, columnasResultado);
     }
     
+    //Permite aplicar la query Help.
     private MensajeQuery mostrarAyuda(String[] sentencias)
     {
         ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
