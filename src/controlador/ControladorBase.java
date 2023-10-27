@@ -500,6 +500,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Retorna las celdas que pertenecen a una fila.
     private Celda obtenerCeldaXNumero(Columna columna, int numeroCelda)
     {
         for(Celda celda : columna.getCeldas())
@@ -512,6 +513,7 @@ public class ControladorBase implements IControladorBase {
         return null;
     }
     
+    //Retorna el valor de celda más alto.
     private Celda obtenerMayorCelda(Columna columna)
     {
         if(columna.getTipo() != eTipoColumna.INT)
@@ -530,6 +532,7 @@ public class ControladorBase implements IControladorBase {
         return mayor;
     }
     
+    //Retorna el valor de celda más bajo.
     private Celda obtenerMenorCelda(Columna columna)
     {
         if(columna.getTipo() != eTipoColumna.INT)
@@ -1223,6 +1226,7 @@ public class ControladorBase implements IControladorBase {
             return new MensajeQuery("Where interpretado con exito", true);
     }
     
+    //Permite aplicar la query Max.
     private MensajeQuery interpretarMax(Columna columnaSeleccionada)
     {
         Celda mayorCelda = obtenerMayorCelda(columnaSeleccionada);
@@ -1241,6 +1245,7 @@ public class ControladorBase implements IControladorBase {
         }
     }
     
+    //Permite aplicar la query Min.
     private MensajeQuery interpretarMin(Columna columnaSeleccionada)
     {
         Celda menorCelda = obtenerMenorCelda(columnaSeleccionada);
