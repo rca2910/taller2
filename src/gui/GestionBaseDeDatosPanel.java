@@ -76,6 +76,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         this.btnModificar.setEnabled(true);
         this.btnCrearTabla.setEnabled(true);
         this.btnEjecutarQuery.setEnabled(true);
+        this.btnEliminar.setEnabled(true);
     }
 
     //Deshabilita los botones ABM de base de datos.
@@ -114,6 +115,9 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 listaBasesMouseClicked(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                listaBasesMousePressed(evt);
+            }
         });
         jScrollPane1.setViewportView(listaBases);
 
@@ -126,6 +130,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         });
 
         btnEliminar.setText("Eliminar Base de Datos");
+        btnEliminar.setEnabled(false);
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
@@ -303,6 +308,15 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         this.setEnabled(false);
         new EjecutarQueryBase(this, baseSeleccionada.getId(), usuarioLogueado);
     }//GEN-LAST:event_btnEjecutarQueryActionPerformed
+
+    private void listaBasesMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaBasesMousePressed
+        if(this.listaBases.getSelectedIndex() >= 0)
+        {
+            BaseDeDatos baseDeLista = (BaseDeDatos) this.modelBases.getElementAt(this.listaBases.getSelectedIndex());
+            baseSeleccionada = controladorBase.obtenerBaseXId(baseDeLista.getId());
+            habilitarBotones();
+        }
+    }//GEN-LAST:event_listaBasesMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
