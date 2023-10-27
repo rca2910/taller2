@@ -9,6 +9,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 import modelo.BaseDeDatos;
 import modelo.Mensaje;
 import modelo.Usuario;
+import modelo.eRolUsuario;
 
 /**
  *
@@ -29,18 +30,13 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
         this.usuarioLogueado = usuarioLogueado;
-        switch (usuarioLogueado.getRol()) {
-
-            case ADMINISTRADOR:
-                CargarVistaAdministrador();
-                break;
-            case LECTOR:
-                CargarVistaLector();
-                break;
-            default:
-                CargarVistaComun();
-                break;
-
+        if(usuarioLogueado.getRol() == eRolUsuario.COMUN)
+        {
+            CargarVistaComun();
+        }
+        else if(usuarioLogueado.getRol() == eRolUsuario.LECTOR)
+        {
+            CargarVistaLector();
         }
     }
     
@@ -57,11 +53,6 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         }
     }
 
-    private void CargarVistaAdministrador() 
-    {
-        
-    }
-
     //Carga la vista del usuario común.
     private void CargarVistaComun() {
         this.btnVolver.setVisible(false);
@@ -75,6 +66,7 @@ public class GestionBaseDeDatosPanel extends javax.swing.JFrame {
         this.btnVolver.setVisible(false);
         this.txtCrear.setVisible(false);
         this.btnCrearBase.setVisible(false);
+        this.btnCrearTabla.setVisible(false);
         this.btnModificar.setVisible(false);
         this.btnEliminar.setVisible(false);
     }

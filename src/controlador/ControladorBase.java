@@ -13,6 +13,7 @@ import modelo.Mensaje;
 import modelo.MensajeQuery;
 import modelo.Sistema;
 import modelo.Tabla;
+import modelo.eRolUsuario;
 import modelo.eTipoColumna;
 import modelo.eVersionUsuario;
 
@@ -177,7 +178,7 @@ public class ControladorBase implements IControladorBase {
     }
 
     //Permite ejecutar una query dentro de una base de datos.
-    public MensajeQuery ejecutarQuery(int idBaseSeleccionada, String query, eVersionUsuario versionUsuario)
+    public MensajeQuery ejecutarQuery(int idBaseSeleccionada, String query, eVersionUsuario versionUsuario, eRolUsuario rolUsuario)
     {
         BaseDeDatos baseSeleccionada = obtenerBaseXId(idBaseSeleccionada);
         if(baseSeleccionada == null)
@@ -193,6 +194,10 @@ public class ControladorBase implements IControladorBase {
         String[] sentencias = query.split("\\s+");
 
         try{
+            if(rolUsuario == eRolUsuario.LECTOR && (sentencias[0].equals("CREATE")|| sentencias[0].equals("UPDATE") || sentencias[0].equals("DELETE") || sentencias[0].equals("INSERT")))
+            {
+                return new MensajeQuery("Los usuarios lectores, solo pueden ejecutar comandos de lectura", false);
+            }
             switch (sentencias[0]) {
                 case "SELECT":
                     return interpretarSelect(baseSeleccionada, sentencias, versionUsuario);
@@ -204,6 +209,12 @@ public class ControladorBase implements IControladorBase {
                     return interpretarInsert(baseSeleccionada, sentencias, versionUsuario);
                 case "UPDATE":
                     return interpretarUpdate(baseSeleccionada, sentencias, versionUsuario);
+                case "SHOW":
+                    return mostrarTablas(baseSeleccionada, sentencias);
+                case "DESCRIBE":
+                    return describeTabla(baseSeleccionada, sentencias);
+                case "HELP":
+                    return mostrarAyuda(sentencias);
                 default:
                     return new MensajeQuery("Error en la query en: " + sentencias[0], false);
             }
@@ -295,12 +306,7 @@ public class ControladorBase implements IControladorBase {
     //Controla que los datos ingresados en la columna sean del tipo correcto.
     private boolean valorValido(Columna columna, String valor, eVersionUsuario versionUsuario)
     {
-        if(valor.toUpperCase() == "NULL" && columna.isNulleable() == false)
-        {
-            return false;
-        }
-
-        if(valor == null || valor.isEmpty())
+        if(valor == null && columna.isNulleable())
         {
             return true;
         }
@@ -485,6 +491,10 @@ public class ControladorBase implements IControladorBase {
                 return eTipoColumna.INT;
             case "VARCHAR":
                 return eTipoColumna.VARCHAR;
+            case "BOOL":
+                return eTipoColumna.BOOL;
+            case "DATE":
+                return eTipoColumna.DATE;
             default:
                 return null;
         }
@@ -671,6 +681,17 @@ public class ControladorBase implements IControladorBase {
                 posicionActual++;
             }
             posicionActual++;
+            ArrayList<Tabla> tablasSeleccionadas = new ArrayList<Tabla>();
+            while(!sentencias[posicionActual].equals("WHERE") || sentencias.length < posicionActual)
+            {
+                String nombreTablaSeleccionada = sentencias[posicionActual];
+                Tabla tablaSeleccionada = obtenerTablaXNombre(baseSeleccionada, nombreTablaSeleccionada);
+                if(tablaSeleccionada == null)
+                {
+                    return new MensajeQuery("La tabla: " + nombreTablaSeleccionada + " no existe en la base de datos", false);
+                }
+                tablasSeleccionadas.add(tablaSeleccionada);
+            }
             
             //ArrayList<String> nombresTablasSe
             
@@ -1236,5 +1257,100 @@ public class ControladorBase implements IControladorBase {
             columnaRetorno.setCeldas(celdasAAgregar);
             return new MensajeQuery("Min interpretado con exito", true, columnasResultado);
         }
+    }
+    
+    private MensajeQuery mostrarTablas(BaseDeDatos baseSeleccionada, String[] sentencias)
+    {
+        ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
+        if(sentencias.length != 2 || !sentencias[1].equals("TABLES"))
+        {
+            return new MensajeQuery("Verifique la sintaxis de SHOW TABLES", false);
+        }
+        for(Tabla t : baseSeleccionada.getTablas())
+        {
+            columnasResultado.add(new Columna(t.getNombre(), eTipoColumna.VARCHAR, true));
+        }
+        return new MensajeQuery("Show tables interpretado con exito", true, columnasResultado);
+    }
+    
+    private MensajeQuery describeTabla(BaseDeDatos baseSeleccionada, String[] sentencias)
+    {
+        ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
+        if(sentencias.length != 2)
+        {
+            return new MensajeQuery("Verifique la sintaxis de DESCRIBE, debe contener solo 1 tabla", false);
+        }
+        String nombreTabla = sentencias[1];
+        Tabla tablaSeleccionada = obtenerTablaXNombre(baseSeleccionada, nombreTabla);
+        
+        if(tablaSeleccionada == null)
+        {
+            return new MensajeQuery("La tabla: " + nombreTabla + " no existe en la base de datos", false);
+        }
+        
+        Columna nombre = new Columna("Nombre columna", eTipoColumna.VARCHAR, true);
+        Columna tipo = new Columna("Tipo columna", eTipoColumna.VARCHAR, true);
+        Columna nulleable = new Columna("Nulleable", eTipoColumna.VARCHAR, true);
+        int numeroCelda = 0;
+        for(Columna c : tablaSeleccionada.getColumnas())
+        {
+            Celda celdaNombre = new Celda(c.getNombre(), numeroCelda);
+            Celda celdaTipo = new Celda(c.getTipo().name(), numeroCelda);
+            String columnaEsNulleable = "FALSE";
+            if(c.isNulleable())
+            {
+                columnaEsNulleable = "TRUE";
+            }
+            Celda celdaNulleable = new Celda(columnaEsNulleable, numeroCelda);
+            
+            nombre.getCeldas().add(celdaNombre);
+            tipo.getCeldas().add(celdaTipo);
+            nulleable.getCeldas().add(celdaNulleable);
+            
+            numeroCelda++;
+        }
+        
+        columnasResultado.add(nombre);
+        columnasResultado.add(tipo);
+        columnasResultado.add(nulleable);
+        
+        return new MensajeQuery("Describe interpretado con exito", true, columnasResultado);
+    }
+    
+    private MensajeQuery mostrarAyuda(String[] sentencias)
+    {
+        ArrayList<Columna> columnasResultado = new ArrayList<Columna>();
+        if(sentencias.length != 2)
+        {
+            return new MensajeQuery("HELP contiene las siguientes acciones disponibles:\n SELECT, CREATE, UPDATE, DELETE, INSERT"
+                    + "SHOW, DESCRIBE \n Ejemplo: SHOW SELECT", false);
+        }
+        
+        switch(sentencias[1])
+        {
+        case "SELECT":
+            return new MensajeQuery("La query SELECT en SQL recupera datos de una tabla.\nEjemplo: SELECT nombre, edad FROM Empleados;", true);
+        
+        case "UPDATE":
+            return new MensajeQuery("La query UPDATE actualiza datos existentes en una tabla.\nEjemplo: UPDATE Empleados SET edad = 30 WHERE nombre = 'Juan';", true);
+
+        case "CREATE":
+            return new MensajeQuery("La query CREATE crea una nueva tabla o base de datos.\nEjemplo: CREATE TABLE Empleados (nombre VARCHAR(50), edad INT);", true);
+
+        case "DELETE":
+            return new MensajeQuery("La query DELETE elimina registros de una tabla.\nEjemplo: DELETE FROM Empleados WHERE nombre = 'Juan';", true);
+
+        case "INSERT":
+            return new MensajeQuery("La query INSERT agrega nuevos registros a una tabla.\nEjemplo: INSERT INTO Empleados (nombre, edad) VALUES ('Juan', 25);", true);
+
+        case "DESCRIBE":
+            return new MensajeQuery("La query DESCRIBE muestra la estructura de una tabla.\nEjemplo: DESCRIBE Empleados;", true);
+
+        case "SHOW":
+            return new MensajeQuery("La query SHOW lista bases de datos o tablas.\nEjemplo: SHOW TABLES;", true);
+
+        default:
+            return new MensajeQuery("HELP contiene las siguientes acciones disponibles:\n SELECT, CREATE, UPDATE, DELETE, INSERT, SHOW, DESCRIBE \n Ejemplo: HELP SELECT", false);
+}
     }
 }

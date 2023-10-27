@@ -2,6 +2,7 @@ package gui;
 
 import controlador.Fachada;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.table.DefaultTableModel;
@@ -135,7 +136,7 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
             MensajeQuery ejecucion = new MensajeQuery("", false);
             for(String query : queriesIndividuales)
             {
-                ejecucion = fachada.getControladorBase().ejecutarQuery(idBaseAModificar, query, usuarioLogueado.getVersionUsuario());
+                ejecucion = fachada.getControladorBase().ejecutarQuery(idBaseAModificar, query, usuarioLogueado.getVersionUsuario(), usuarioLogueado.getRol());
                 if(ejecucion.isExito())
                 {
                     queriesEjecutadas++;
@@ -161,7 +162,7 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
             {
                 queryCompleta = queryCompleta.substring(0, queryCompleta.length() - 1);
             }
-            MensajeQuery ejecucion = fachada.getControladorBase().ejecutarQuery(idBaseAModificar, queryCompleta, usuarioLogueado.getVersionUsuario());
+            MensajeQuery ejecucion = fachada.getControladorBase().ejecutarQuery(idBaseAModificar, queryCompleta, usuarioLogueado.getVersionUsuario(), usuarioLogueado.getRol());
             
             if (ejecucion.isExito()) {
             showMessageDialog(null, ejecucion.getMensaje(), "", JOptionPane.INFORMATION_MESSAGE);
@@ -181,16 +182,23 @@ public class EjecutarQueryBase extends javax.swing.JFrame {
 
     //Permite mostrar las columnas de la tabla.
     private void mostrarColumnas(ArrayList<Columna> columnas) {
-        modelTablaResultado = new DefaultTableModel();
-        this.tablaResultado.setModel(modelTablaResultado);
-        for(Columna c : columnas)
-        {
-            modelTablaResultado.addColumn(c.getNombre());
-            for (Celda celda : c.getCeldas()) 
-            {
-                modelTablaResultado.addRow(new Object[]{celda.getValor()});
-            }
+   modelTablaResultado = new DefaultTableModel();
+    this.tablaResultado.setModel(modelTablaResultado);
+
+    for(Columna c : columnas) {
+        modelTablaResultado.addColumn(c.getNombre());
+    }
+
+    int maxRows = columnas.stream().mapToInt(col -> col.getCeldas().size()).max().orElse(0);
+
+    for (int i = 0; i < maxRows; i++) {
+        Object[] row = new Object[columnas.size()];
+        for (int j = 0; j < columnas.size(); j++) {
+            List<Celda> celdas = columnas.get(j).getCeldas();
+            row[j] = (i < celdas.size()) ? celdas.get(i).getValor() : null;
         }
+        modelTablaResultado.addRow(row);
+    }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

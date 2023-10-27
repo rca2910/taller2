@@ -18,9 +18,10 @@ public class Inicio {
     public static void main(String[] args) {
         
         Fachada fachada = new Fachada();
-        fachada.getControladorUsuario().altaUsuario("12345678", "Tito", "Apellido", "contrasena", eRolUsuario.ADMINISTRADOR, eVersionUsuario.DEMO);
-        fachada.getControladorUsuario().altaUsuario("1234", "LECTOR", "LECTOR", "1234", eRolUsuario.LECTOR, eVersionUsuario.DEMO);
-        fachada.getControladorUsuario().altaUsuario("4321", "COMUN", "COMUN", "1234", eRolUsuario.COMUN, eVersionUsuario.DEMO);
+        fachada.getControladorUsuario().altaUsuario("12345678", "Admin", "Administrador", "admin", eRolUsuario.ADMINISTRADOR, eVersionUsuario.FULL);
+        fachada.getControladorUsuario().altaUsuario("87654321", "AdminDemo", "AdministradorDemo", "admin", eRolUsuario.ADMINISTRADOR, eVersionUsuario.DEMO);
+        fachada.getControladorUsuario().altaUsuario("11223344", "Lector", "Leido", "lector", eRolUsuario.LECTOR, eVersionUsuario.DEMO);
+        fachada.getControladorUsuario().altaUsuario("44332211", "Comun", "Comuncito", "comun", eRolUsuario.COMUN, eVersionUsuario.DEMO);
         
         fachada.getControladorBase().altaBase("prueba");
         BaseDeDatos prueba = fachada.getControladorBase().obtenerBaseXId(1);

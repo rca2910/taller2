@@ -33,8 +33,8 @@ public class Login extends javax.swing.JFrame {
         lblLoginUsuario = new javax.swing.JLabel();
         lblLoginContrasena = new javax.swing.JLabel();
         txtusuario = new javax.swing.JTextField();
-        txtcontrasena = new javax.swing.JTextField();
         btnlogin = new javax.swing.JButton();
+        txtcontrasena = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestor de Bases de datos");
@@ -77,13 +77,12 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(lblLoginTitulo)
                         .addGap(214, 214, 214))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(lblLoginContrasena)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtusuario)
-                                .addComponent(txtcontrasena, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
-                                .addComponent(btnlogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lblLoginUsuario))
+                            .addComponent(txtusuario)
+                            .addComponent(btnlogin, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+                            .addComponent(lblLoginUsuario)
+                            .addComponent(txtcontrasena))
                         .addGap(264, 264, 264))))
         );
         layout.setVerticalGroup(
@@ -145,7 +144,7 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JLabel lblLoginContrasena;
     private javax.swing.JLabel lblLoginTitulo;
     private javax.swing.JLabel lblLoginUsuario;
-    private javax.swing.JTextField txtcontrasena;
+    private javax.swing.JPasswordField txtcontrasena;
     private javax.swing.JTextField txtusuario;
     // End of variables declaration//GEN-END:variables
 }

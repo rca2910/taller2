@@ -16,6 +16,7 @@ import modelo.Mensaje;
 import modelo.Tabla;
 import modelo.Usuario;
 import modelo.eTipoColumna;
+import modelo.eVersionUsuario;
 
 public class CrearTablaBase extends javax.swing.JFrame {
     
@@ -377,15 +378,23 @@ public class CrearTablaBase extends javax.swing.JFrame {
     
     //Lista los posibles tipos de datos.
     private void listarTipoCombos() {
-        DefaultComboBoxModel modelTipo1 = new DefaultComboBoxModel(eTipoColumna.values());
+        DefaultComboBoxModel modelTipo1 = new DefaultComboBoxModel(eTipoColumna.valoresLimitados());
+        DefaultComboBoxModel modelTipo2 = new DefaultComboBoxModel(eTipoColumna.valoresLimitados());
+        DefaultComboBoxModel modelTipo3 = new DefaultComboBoxModel(eTipoColumna.valoresLimitados());
+        DefaultComboBoxModel modelTipo4 = new DefaultComboBoxModel(eTipoColumna.valoresLimitados());
+        DefaultComboBoxModel modelTipo5 = new DefaultComboBoxModel(eTipoColumna.valoresLimitados());
+        if(usuarioLogueado.getVersionUsuario() == eVersionUsuario.FULL)
+        {
+            modelTipo1 = new DefaultComboBoxModel(eTipoColumna.values());
+            modelTipo2 = new DefaultComboBoxModel(eTipoColumna.values());
+            modelTipo3 = new DefaultComboBoxModel(eTipoColumna.values());
+            modelTipo4 = new DefaultComboBoxModel(eTipoColumna.values());
+            modelTipo5 = new DefaultComboBoxModel(eTipoColumna.values());
+        }
         this.comboTipoColumna1.setModel(modelTipo1);
-        DefaultComboBoxModel modelTipo2 = new DefaultComboBoxModel(eTipoColumna.values());
         this.comboTipoColumna2.setModel(modelTipo2);
-        DefaultComboBoxModel modelTipo3 = new DefaultComboBoxModel(eTipoColumna.values());
         this.comboTipoColumna3.setModel(modelTipo3);
-        DefaultComboBoxModel modelTipo4 = new DefaultComboBoxModel(eTipoColumna.values());
         this.comboTipoColumna4.setModel(modelTipo4);
-        DefaultComboBoxModel modelTipo5 = new DefaultComboBoxModel(eTipoColumna.values());
         this.comboTipoColumna5.setModel(modelTipo5);
     }
     
