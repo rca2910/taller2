@@ -405,13 +405,15 @@ public class ControladorBase implements IControladorBase {
             }
             else
             {
+                ArrayList<Celda> celdasEncontradasAux = new ArrayList<Celda>();
                 for(Celda c : celdasEncontradas)
                 {
-                    if(!celdaCumpleCondicion(columna.getTipo(), c, condicion))
+                    if(celdaCumpleCondicion(columna.getTipo(), c, condicion))
                     {
-                        celdasEncontradas.remove(c);
+                        celdasEncontradasAux.add(c);
                     }
                 }
+                celdasEncontradas = celdasEncontradasAux;
             }
         }
         return celdasEncontradas;
@@ -686,8 +688,16 @@ public class ControladorBase implements IControladorBase {
             }
             
             int posicionActual = 1;
+            boolean seleccionarTodo = false;
             ArrayList<String> nombresColumnasSeleccionadas = new ArrayList<String>();
             
+            if(sentencias[posicionActual].equals("*") && sentencias[posicionActual +1].equals("FROM"))
+            {
+                seleccionarTodo = true;
+                posicionActual++;
+            }
+            else
+            {
             while(!sentencias[posicionActual].equals("FROM"))
             {
                 if(sentencias[posicionActual].endsWith(","))
@@ -697,6 +707,7 @@ public class ControladorBase implements IControladorBase {
                 
                 nombresColumnasSeleccionadas.add(sentencias[posicionActual]);
                 posicionActual++;
+            }
             }
             posicionActual++;
             
@@ -708,6 +719,12 @@ public class ControladorBase implements IControladorBase {
             }
             
             ArrayList<Columna> columnasSeleccionadas = new ArrayList<Columna>();
+            if(seleccionarTodo == true)
+            {
+                columnasSeleccionadas = tablaSeleccionada.getColumnas();
+            }
+            else
+            {
             for(String nombreColumna : nombresColumnasSeleccionadas)
             {
                 Columna aAgregar = obtenerColumnaXNombre(tablaSeleccionada, nombreColumna);
@@ -716,6 +733,7 @@ public class ControladorBase implements IControladorBase {
                     return new MensajeQuery("La columna: " + nombreColumna + " no existe en la tabla", false);
                 }
                 columnasSeleccionadas.add(aAgregar);
+            }
             }
             posicionActual++;
             
@@ -932,7 +950,7 @@ public class ControladorBase implements IControladorBase {
             {
                 if(!esNulleable)
                 {
-                    posicionActual += 2;
+                    posicionActual += 3;
                 }
                 else
                 {
@@ -1270,6 +1288,7 @@ public class ControladorBase implements IControladorBase {
             }
         }
         ArrayList<String> nombresColumnasFiltradas = new ArrayList<String>();
+        boolean primerChequeoRealizado = false;
         for(Columna c : columnasAConsiderar)
         {
             boolean columnaYaFiltrada = false;
@@ -1290,7 +1309,27 @@ public class ControladorBase implements IControladorBase {
                         condicionesAux.add(condiciones.get(i));
                     }
                 }
-                celdasCumplenCondicion.addAll(obtenerCeldasXCondiciones(c, condicionesAux));
+                if(primerChequeoRealizado == false)
+                {
+                    celdasCumplenCondicion.addAll(obtenerCeldasXCondiciones(c, condicionesAux));
+                    primerChequeoRealizado = true;
+                }
+                else if(primerChequeoRealizado == true && celdasCumplenCondicion.size() > 0)
+                {
+                    ArrayList<Celda> celdasCumplenCondicionAux = obtenerCeldasXCondiciones(c, condicionesAux);
+                    ArrayList<Celda> celdasAFiltradas = new ArrayList<Celda>();
+                    for(Celda cumpleCondicion : celdasCumplenCondicionAux)
+                    {
+                        for(Celda celdaACorroborar : celdasCumplenCondicion)
+                        {
+                            if(cumpleCondicion.getNumero() == celdaACorroborar.getNumero())
+                            {
+                                celdasAFiltradas.add(cumpleCondicion);
+                            }
+                        }
+                    }
+                    celdasCumplenCondicion = celdasAFiltradas;
+                }
                 nombresColumnasFiltradas.add(c.getNombre());
             }
         }
@@ -1311,8 +1350,8 @@ public class ControladorBase implements IControladorBase {
         }
         else
         {
-            ArrayList<Celda> celdasAAgregar = new ArrayList<Celda>();
-            columnaRetorno.setCeldas(celdasAAgregar);
+            columnaRetorno.getCeldas().add(mayorCelda);
+            columnasResultado.add(columnaRetorno);
             return new MensajeQuery("Max interpretado con exito", true, columnasResultado);
         }
     }
@@ -1330,8 +1369,8 @@ public class ControladorBase implements IControladorBase {
         }
         else
         {
-            ArrayList<Celda> celdasAAgregar = new ArrayList<Celda>();
-            columnaRetorno.setCeldas(celdasAAgregar);
+            columnaRetorno.getCeldas().add(menorCelda);
+            columnasResultado.add(columnaRetorno);
             return new MensajeQuery("Min interpretado con exito", true, columnasResultado);
         }
     }
